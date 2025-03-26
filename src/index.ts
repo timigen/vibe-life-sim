@@ -1,7 +1,7 @@
 import { Group } from './types/Group';
 import { MicrobeConfig } from './types/MicrobeConfig';
 import { FoodConfig } from './types/FoodConfig';
-import { Vector2D } from './types/Vector2D';
+import { Vector2D } from './utils/Vector2D';
 
 class Microbe {
   public position: Vector2D;
