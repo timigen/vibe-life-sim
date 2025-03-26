@@ -87,6 +87,15 @@
     let CANVAS_WIDTH = window.innerWidth;
     let CANVAS_HEIGHT = window.innerHeight;
 
+    const canvas = document.getElementById("simCanvas");
+    const ctx = canvas.getContext("2d");
+    canvas.width = CANVAS_WIDTH;
+    canvas.height = CANVAS_HEIGHT;
+
+    let paused = false;
+    let animationFrameId;
+    let maxPopulation = 0;
+
     const INITIAL_POPULATION_PER_GROUP = 20;
     const INITIAL_FOOD_COUNT = 70;
     const GROUPS = [
@@ -121,6 +130,10 @@
       MAX_SPAWN_CHANCE: 0.1,
       POPULATION_SPAWN_FACTOR: 0.0005
     };
+
+    function getRandom(min, max) {
+      return Math.random() * (max - min) + min;
+    }
 
     // Performance optimization: Use TypedArrays for better memory usage
     class Vector2D {
@@ -187,8 +200,8 @@
         
         if (nearestFood) {
           const direction = new Vector2D(
-            nearestFood.x - this.position.x,
-            nearestFood.y - this.position.y
+            nearestFood.position.x - this.position.x,
+            nearestFood.position.y - this.position.y
           );
           const hungerScale = Math.min(2, Math.max(1, this.hunger / 100));
           direction.normalize().multiply(MICROBE_CONFIG.SPEED * hungerScale);
@@ -227,7 +240,7 @@
         let minDist = Infinity;
         
         for (let food of foods) {
-          const dist = this.position.distanceTo(food);
+          const dist = this.position.distanceTo(food.position);
           if (dist < minDist) {
             minDist = dist;
             nearestFood = food;
@@ -462,19 +475,6 @@
       animationFrameId = requestAnimationFrame(update);
     }
 
-    // Initialize and start simulation
-    initializeSimulation();
-    update();
-
-    let paused = false;
-    let animationFrameId;
-    let maxPopulation = 0;
-
-    const canvas = document.getElementById("simCanvas");
-    const ctx = canvas.getContext("2d");
-    canvas.width = CANVAS_WIDTH;
-    canvas.height = CANVAS_HEIGHT;
-
     window.addEventListener("resize", () => {
       CANVAS_WIDTH = window.innerWidth;
       CANVAS_HEIGHT = window.innerHeight;
@@ -482,16 +482,16 @@
       canvas.height = CANVAS_HEIGHT;
     });
 
-    function getRandom(min, max) {
-      return Math.random() * (max - min) + min;
-    }
-
     document.getElementById("toggleBtn").addEventListener("click", () => {
       paused = !paused;
       const btn = document.getElementById("toggleBtn");
       btn.textContent = paused ? "▶️" : "⏸";
       if (!paused) update();
     });
+
+    // Initialize and start simulation
+    initializeSimulation();
+    update();
   </script>
 </body>
 </html>
