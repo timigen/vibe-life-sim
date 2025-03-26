@@ -1,57 +1,7 @@
-interface Group {
-  color: string;
-}
-
-interface MicrobeConfig {
-  INITIAL_RADIUS: number;
-  MAX_RADIUS: number;
-  MIN_RADIUS: number;
-  SPEED: number;
-  MATING_DISTANCE: number;
-  GESTATION_PERIOD: number;
-  HUNGER_LIMIT: number;
-  HUNGER_THRESHOLD_FOR_MATING: number;
-  FULLNESS_DURATION: number;
-  SIZE_INCREMENT: number;
-  SIZE_DECREMENT: number;
-  AGE_LIMIT: number;
-  REST_CHANCE: number;
-  REST_MIN_DURATION: number;
-  REST_MAX_DURATION: number;
-}
-
-interface FoodConfig {
-  RADIUS: number;
-  SPAWN_BASE_CHANCE: number;
-  MAX_SPAWN_CHANCE: number;
-  POPULATION_SPAWN_FACTOR: number;
-}
-
-class Vector2D {
-  constructor(
-    public x: number,
-    public y: number
-  ) {}
-
-  distanceTo(other: Vector2D): number {
-    return Math.hypot(this.x - other.x, this.y - other.y);
-  }
-
-  normalize(): Vector2D {
-    const d = Math.hypot(this.x, this.y);
-    if (d > 0) {
-      this.x /= d;
-      this.y /= d;
-    }
-    return this;
-  }
-
-  multiply(scalar: number): Vector2D {
-    this.x *= scalar;
-    this.y *= scalar;
-    return this;
-  }
-}
+import { Group } from './types/Group';
+import { MicrobeConfig } from './types/MicrobeConfig';
+import { FoodConfig } from './types/FoodConfig';
+import { Vector2D } from './types/Vector2D';
 
 class Microbe {
   public position: Vector2D;
