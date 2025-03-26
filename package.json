@@ -1,0 +1,15 @@
+{
+  "name": "microbial-world-simulation",
+  "version": "1.0.0",
+  "description": "A simulation of a microbial world with different colored microbes that eat, mate, and evolve.",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "start": "npm run build && serve ."
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3",
+    "serve": "^14.2.1"
+  }
+} 
