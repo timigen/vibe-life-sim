@@ -29,7 +29,7 @@ canvas.height = GameState.CANVAS_HEIGHT;
 const world = new World(INITIAL_POPULATION_PER_GROUP * GROUPS.length * 2 * 2); // Double initial size for growth
 world.addSystem(new RenderingSystem(ctx));
 world.addSystem(new MovementSystem());
-world.addSystem(new LifecycleSystem());
+world.addSystem(new LifecycleSystem(world));
 world.addSystem(new MatingSystem(world));
 let foods: Entity[] = [];
 
