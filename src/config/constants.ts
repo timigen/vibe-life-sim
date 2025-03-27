@@ -1,6 +1,6 @@
 // Game initialization constants
 export const INITIAL_POPULATION_PER_GROUP = 50;
-export const INITIAL_FOOD_COUNT = 70;
+export const INITIAL_FOOD_COUNT = 140;
 
 export interface Group {
   color: string;
