@@ -4,7 +4,7 @@ import { World } from '../ecs/World';
 
 export class UISystem extends System {
   private world: World;
-  private lastFPSUpdate: number = 0;
+  private lastFPSUpdate: number = performance.now();
   private frameCount: number = 0;
   private updatePending: boolean = false;
 
@@ -22,8 +22,12 @@ export class UISystem extends System {
     this.frameCount++;
     const now = performance.now();
     
+    // Calculate FPS immediately for the first frame
+    const currentFps = Math.round((this.frameCount * 1000) / (now - this.lastFPSUpdate));
+    document.getElementById('fpsCounter')!.textContent = currentFps.toString();
+    
     if (now - this.lastFPSUpdate >= 1000) {
-      GameState.fps = Math.round((this.frameCount * 1000) / (now - this.lastFPSUpdate));
+      GameState.fps = currentFps;
       // Update average FPS
       GameState.totalFps += GameState.fps;
       GameState.fpsSamples++;
