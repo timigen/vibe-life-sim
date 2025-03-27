@@ -103,7 +103,7 @@ export class CollisionSystem extends System {
 
     if (distance < minDistance) {
       // Food is consumed
-      life.hunger = Math.max(0, life.hunger - 200); // Reduce hunger significantly
+      life.hunger = Math.max(0, life.hunger - 400); // Reduce hunger by a significant amount
 
       // Emit food consumed event
       eventEmitter.emit(EVENTS.FOOD_CONSUMED, {

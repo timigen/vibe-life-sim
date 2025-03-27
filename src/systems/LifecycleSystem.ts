@@ -24,7 +24,7 @@ export class LifecycleSystem extends System {
 
       // Use deltaTime for consistent aging and hunger accumulation
       life.age += deltaTime;
-      life.hunger += (life.restTimer > 0 ? 0.2 : 1) * deltaTime;
+      life.hunger += (life.restTimer > 0 ? 0.1 : 0.5) * deltaTime;
 
       // Update group stats
       const groupStat = SimState.groupStats.find(

@@ -1,6 +1,5 @@
 import { Entity } from './ecs/Entity';
 import { System } from './ecs/System';
-import { LifePool } from './LifePool';
 import { Group } from './types/Group';
 import { LifeComponent } from '../components/LifeComponent';
 import { FoodComponent } from '../components/FoodComponent';
@@ -8,6 +7,7 @@ import { PositionComponent } from '../components/PositionComponent';
 import { FOOD_CONFIG } from './config/FoodConfig';
 import { Vector2D } from './Vector2D';
 import { eventEmitter, EVENTS } from './events/EventEmitter';
+import { LifePool } from './LifePool';
 
 export class World {
   private entities: Entity[] = [];
