@@ -28,6 +28,14 @@
             padding: 10px;
             border-radius: 5px;
             z-index: 1000;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
         #gameOver {
             display: none;
@@ -69,7 +77,12 @@
 </head>
 <body>
     <div id="controls">
-        Life Forms: <span id="populationCount">0</span>
+        <div class="stat">
+            Life Forms: <span id="populationCount">0</span>
+        </div>
+        <div class="stat">
+            FPS: <span id="fpsCounter">0</span>
+        </div>
         <button id="toggleBtn">⏸</button>
     </div>
     <canvas id="simCanvas"></canvas>

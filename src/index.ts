@@ -182,6 +182,11 @@ let paused = false;
 let animationFrameId: number;
 let maxPopulation = 0;
 
+// FPS counter variables
+let lastTime = performance.now();
+let frameCount = 0;
+let fps = 0;
+
 const INITIAL_POPULATION_PER_GROUP = 20;
 const INITIAL_FOOD_COUNT = 70;
 const GROUPS: Group[] = [{ color: '#ff5555' }, { color: '#55aaff' }, { color: '#55ff55' }];
@@ -331,6 +336,16 @@ function spawnFood(): void {
 function update(): void {
   if (paused) return;
 
+  // Calculate FPS
+  const currentTime = performance.now();
+  frameCount++;
+
+  if (currentTime - lastTime >= 1000) {
+    fps = Math.round((frameCount * 1000) / (currentTime - lastTime));
+    frameCount = 0;
+    lastTime = currentTime;
+  }
+
   ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
   spawnFood();
 
@@ -347,6 +362,7 @@ function update(): void {
   for (const life of lives) life.draw(ctx);
 
   document.getElementById('populationCount')!.textContent = lives.length.toString();
+  document.getElementById('fpsCounter')!.textContent = fps.toString();
   maxPopulation = Math.max(maxPopulation, lives.length);
 
   if (lives.length === 0) {
