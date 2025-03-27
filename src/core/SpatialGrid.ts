@@ -5,18 +5,18 @@ import { Entity } from './ecs/Entity';
 export class SpatialGrid {
   private grid: Map<string, Set<Entity>> = new Map();
   private cellSize: number;
+  private entityCellCache: Map<number, string[]> = new Map();
 
   constructor(cellSize: number = 50) {
     this.cellSize = cellSize;
   }
 
-  private getCellKey(x: number, y: number): string {
-    const cellX = Math.floor(x / this.cellSize);
-    const cellY = Math.floor(y / this.cellSize);
-    return `${cellX},${cellY}`;
-  }
-
   private getEntityCells(entity: Entity): string[] {
+    // Check if we have cached cells for this entity
+    if (this.entityCellCache.has(entity.id)) {
+      return this.entityCellCache.get(entity.id)!;
+    }
+
     const component = entity.getComponent(PositionComponent);
     const life = entity.getComponent(LifeComponent);
     if (!component || !life) return [];
@@ -33,12 +33,16 @@ export class SpatialGrid {
         cells.push(`${x},${y}`);
       }
     }
+
+    // Cache the cells for this entity
+    this.entityCellCache.set(entity.id, cells);
     return cells;
   }
 
   update(entities: Entity[]): void {
-    // Clear the grid
+    // Clear the grid and entity cell cache
     this.grid.clear();
+    this.entityCellCache.clear();
 
     // Add entities to their cells
     for (const entity of entities) {

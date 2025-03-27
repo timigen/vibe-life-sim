@@ -8,9 +8,7 @@ import { LIFE_CONFIG } from '../core/config/LifeConfig';
 import { eventEmitter, EVENTS } from '../core/events/EventEmitter';
 
 export class LifecycleSystem extends System {
-  constructor(
-    private world: World
-  ) {
+  constructor(private world: World) {
     super();
   }
 
@@ -55,12 +53,7 @@ export class LifecycleSystem extends System {
           const newSex = Math.random() < 0.5 ? 'male' : 'female';
 
           // Spawn new life form
-          this.world.spawnLife(
-            comp.pos.x + offsetX,
-            comp.pos.y + offsetY,
-            life.group,
-            newSex
-          );
+          this.world.spawnLife(comp.pos.x + offsetX, comp.pos.y + offsetY, life.group, newSex);
 
           // Reset pregnancy
           life.isPregnant = false;

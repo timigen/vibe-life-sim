@@ -18,8 +18,10 @@ export class CollisionSystem extends System {
 
   shouldProcessEntity(entity: Entity): boolean {
     // We want to process both life entities and food entities for collision detection
-    return entity.hasComponent(PositionComponent) && 
-           (entity.hasComponent(LifeComponent) || entity.hasComponent(FoodComponent));
+    return (
+      entity.hasComponent(PositionComponent) &&
+      (entity.hasComponent(LifeComponent) || entity.hasComponent(FoodComponent))
+    );
   }
 
   async update(deltaTime: number): Promise<void> {
@@ -27,6 +29,9 @@ export class CollisionSystem extends System {
     // Use all filtered entities for collision detection
     this.allEntities = [...this.filteredEntities];
     const lifeEntities = this.allEntities.filter(e => e.hasComponent(LifeComponent));
+
+    // Update spatial grid with all entities positions
+    this.spatialGrid.update(this.allEntities);
 
     for (let i = 0; i < lifeEntities.length; i += BATCH_SIZE) {
       const batch = lifeEntities.slice(i, i + BATCH_SIZE);
@@ -38,9 +43,6 @@ export class CollisionSystem extends System {
   }
 
   private async processBatch(batch: Entity[]): Promise<void> {
-    // Update spatial grid with all entities positions
-    this.spatialGrid.update(this.allEntities);
-
     // Process collisions using spatial grid
     const processedPairs = new Set<string>();
 
@@ -60,17 +62,17 @@ export class CollisionSystem extends System {
         // Check if this is a life-food collision
         const lifeA = entityA.getComponent(LifeComponent);
         const foodB = entityB.getComponent(FoodComponent);
-        
+
         if (lifeA && foodB) {
           // Process food consumption
           this.processLifeFoodCollision(entityA, entityB, posA, posB);
           continue;
         }
-        
+
         // Check for the reverse case
         const lifeB = entityB.getComponent(LifeComponent);
         const foodA = entityA.getComponent(FoodComponent);
-        
+
         if (lifeB && foodA) {
           // Process food consumption (reversed)
           this.processLifeFoodCollision(entityB, entityA, posB, posA);
@@ -84,38 +86,38 @@ export class CollisionSystem extends System {
       }
     }
   }
-  
+
   private processLifeFoodCollision(
-    lifeEntity: Entity, 
+    lifeEntity: Entity,
     foodEntity: Entity,
     lifePos: PositionComponent,
     foodPos: PositionComponent
   ): void {
     const life = lifeEntity.getComponent(LifeComponent);
     const food = foodEntity.getComponent(FoodComponent);
-    
+
     if (!life || !food || life.dead) return;
-    
+
     const distance = lifePos.pos.distanceTo(foodPos.pos);
     const minDistance = life.radius + food.radius;
-    
+
     if (distance < minDistance) {
       // Food is consumed
       life.hunger = Math.max(0, life.hunger - 20); // Reduce hunger
-      
+
       // Emit food consumed event
-      eventEmitter.emit(EVENTS.FOOD_CONSUMED, { 
-        lifeEntity, 
+      eventEmitter.emit(EVENTS.FOOD_CONSUMED, {
+        lifeEntity,
         foodEntity,
-        position: { x: foodPos.pos.x, y: foodPos.pos.y }
+        position: { x: foodPos.pos.x, y: foodPos.pos.y },
       });
-      
+
       // Mark the entity for removal
       // Note: The actual removal is handled elsewhere
       food.consumed = true;
     }
   }
-  
+
   private processLifeLifeCollision(
     entityA: Entity,
     entityB: Entity,
@@ -125,17 +127,14 @@ export class CollisionSystem extends System {
     posB: PositionComponent
   ): void {
     if (lifeA.dead || lifeB.dead) return;
-    
+
     const distance = posA.pos.distanceTo(posB.pos);
     const minDistance = lifeA.radius + lifeB.radius;
 
     if (distance < minDistance) {
       // Calculate collision response
       const overlap = minDistance - distance;
-      const direction = new Vector2D(
-        posB.pos.x - posA.pos.x,
-        posB.pos.y - posA.pos.y
-      ).normalize();
+      const direction = new Vector2D(posB.pos.x - posA.pos.x, posB.pos.y - posA.pos.y).normalize();
 
       // Move entities apart
       const moveAmount = direction.clone().multiply(overlap / 2);

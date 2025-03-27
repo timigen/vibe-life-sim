@@ -8,7 +8,7 @@ export abstract class System {
   addEntity(entity: Entity): void {
     // Always add to the main entities list
     this.entities.push(entity);
-    
+
     // Only add to filtered list if it should be processed
     if (this.shouldProcessEntity(entity)) {
       this.filteredEntities.push(entity);

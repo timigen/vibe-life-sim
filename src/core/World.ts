@@ -24,7 +24,7 @@ export class World {
     foodEntity.addComponent(new PositionComponent(new Vector2D(x, y)));
     foodEntity.addComponent(new FoodComponent(FOOD_CONFIG.RADIUS));
     this.addEntity(foodEntity);
-    
+
     // Emit food created event
     eventEmitter.emit(EVENTS.FOOD_CREATED, { entity: foodEntity, position: { x, y } });
   }
@@ -33,10 +33,10 @@ export class World {
     const entity = this.lifePool.spawn(x, y, group, sex);
     entity.setWorld(this);
     this.addEntity(entity);
-    
+
     // Emit life born event
     eventEmitter.emit(EVENTS.LIFE_BORN, { entity, position: { x, y }, group, sex });
-    
+
     return entity;
   }
 
@@ -44,21 +44,21 @@ export class World {
     const comp = entity.getComponent(PositionComponent) as PositionComponent;
     if (comp) {
       // Emit life died event
-      eventEmitter.emit(EVENTS.LIFE_DIED, { 
-        entity, 
+      eventEmitter.emit(EVENTS.LIFE_DIED, {
+        entity,
         position: { x: comp.pos.x, y: comp.pos.y },
-        group: entity.getComponent(LifeComponent)?.group
+        group: entity.getComponent(LifeComponent)?.group,
       });
-      
+
       // Spawn food at the death location
       this.spawnFood(comp.pos.x, comp.pos.y);
     }
     this.removeEntity(entity);
     this.lifePool.despawn(entity);
-    
+
     // Emit population changed event
-    eventEmitter.emit(EVENTS.POPULATION_CHANGED, { 
-      population: this.getPopulation() 
+    eventEmitter.emit(EVENTS.POPULATION_CHANGED, {
+      population: this.getPopulation(),
     });
   }
 
@@ -66,7 +66,7 @@ export class World {
     this.entities.push(entity);
     entity.setWorld(this);
     this.systems.forEach(system => system.addEntity(entity));
-    
+
     // Emit entity created event
     eventEmitter.emit(EVENTS.ENTITY_CREATED, { entity });
   }
@@ -76,7 +76,7 @@ export class World {
     if (index !== -1) {
       this.entities.splice(index, 1);
       this.systems.forEach(system => system.removeEntity(entity));
-      
+
       // Emit entity destroyed event
       eventEmitter.emit(EVENTS.ENTITY_DESTROYED, { entity });
     }

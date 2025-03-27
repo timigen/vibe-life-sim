@@ -20,14 +20,14 @@ export class Entity {
     const componentName = component.constructor.name;
     const hadComponent = this.components.has(componentName);
     this.components.set(componentName, component);
-    
+
     // Emit event for component being added
     eventEmitter.emit(EVENTS.COMPONENT_ADDED, {
       entity: this,
       componentName,
-      component
+      component,
     });
-    
+
     // If component type changed (added or replaced), notify world to refresh filtering
     if (this.world && !hadComponent) {
       this.world.refreshSystemFiltering();
@@ -46,17 +46,17 @@ export class Entity {
     const componentName = componentType.name;
     const hadComponent = this.components.has(componentName);
     const component = this.components.get(componentName);
-    
+
     if (hadComponent && component) {
       this.components.delete(componentName);
-      
+
       // Emit event for component being removed
       eventEmitter.emit(EVENTS.COMPONENT_REMOVED, {
         entity: this,
         componentName,
-        component
+        component,
       });
-      
+
       // If component was removed, notify world to refresh filtering
       if (this.world) {
         this.world.refreshSystemFiltering();

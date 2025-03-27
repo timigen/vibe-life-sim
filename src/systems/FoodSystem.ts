@@ -10,7 +10,7 @@ import { eventEmitter, EVENTS } from '../core/events/EventEmitter';
 export class FoodSystem extends System {
   constructor(private world: World) {
     super();
-    
+
     // Listen for food consumption events to remove the consumed food
     eventEmitter.on(EVENTS.FOOD_CONSUMED, async (data: any) => {
       if (data.foodEntity) {
@@ -44,4 +44,4 @@ export class FoodSystem extends System {
       }
     }
   }
-} 
+}

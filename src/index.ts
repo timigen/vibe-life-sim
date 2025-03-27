@@ -18,7 +18,6 @@ import { eventEmitter, EVENTS } from './core/events/EventEmitter';
 import { StatisticsSystem } from './systems/StatisticsSystem';
 
 // Global variables
-const TARGET_FRAME_TIME = 1000 / 60; // Target 60 FPS
 const canvas = document.getElementById('simCanvas') as HTMLCanvasElement;
 const ctx = canvas.getContext('2d')!;
 canvas.width = SimState.CANVAS_WIDTH;
@@ -74,7 +73,7 @@ function setPaused(paused: boolean): void {
   SimState.paused = paused;
   const btn = document.getElementById('toggleBtn')!;
   btn.textContent = SimState.paused ? '▶️' : '⏸';
-  
+
   if (paused) {
     eventEmitter.emit(EVENTS.SIM_PAUSED, {});
   } else {
@@ -87,14 +86,9 @@ async function animate(): Promise<void> {
   const now = performance.now();
   const deltaTime = now - SimState.lastTime;
 
-  // Use setTimeout to maintain consistent frame rate
-  if (deltaTime < TARGET_FRAME_TIME) {
-    await new Promise(resolve => setTimeout(resolve, TARGET_FRAME_TIME - deltaTime));
-  }
-
   await update(deltaTime);
   SimState.lastTime = performance.now();
-  
+
   if (!SimState.paused) {
     requestAnimationFrame(animate);
   }

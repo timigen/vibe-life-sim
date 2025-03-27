@@ -13,13 +13,13 @@ export class UISystem extends System {
   constructor(world: World) {
     super();
     this.world = world;
-    
+
     // Listen for population changes
     eventEmitter.on(EVENTS.POPULATION_CHANGED, async (data: any) => {
       this.currentPopulation = data.population;
       this.updateStats();
     });
-    
+
     // Listen for sim pause events to show game over
     eventEmitter.on(EVENTS.SIM_PAUSED, async () => {
       if (this.currentPopulation === 0) {
@@ -37,12 +37,8 @@ export class UISystem extends System {
     this.frameCount++;
     const now = performance.now();
 
-    // Calculate FPS immediately for the first frame
-    const currentFps = Math.round((this.frameCount * 1000) / (now - this.lastFPSUpdate));
-    document.getElementById('fpsCounter')!.textContent = currentFps.toString();
-
     if (now - this.lastFPSUpdate >= 1000) {
-      SimState.fps = currentFps;
+      SimState.fps = Math.round((this.frameCount * 1000) / (now - this.lastFPSUpdate));
       // Update average FPS
       SimState.totalFps += SimState.fps;
       SimState.fpsSamples++;
@@ -62,7 +58,7 @@ export class UISystem extends System {
     document.getElementById('starvationDeaths')!.textContent =
       SimState.deathsByStarvation.toString();
     document.getElementById('oldAgeDeaths')!.textContent = SimState.deathsByOldAge.toString();
-    
+
     // Only perform initial display update if we don't have population yet
     if (this.currentPopulation === 0) {
       this.currentPopulation = this.world.getPopulation();

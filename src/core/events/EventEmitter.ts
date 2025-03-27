@@ -12,8 +12,8 @@ export const EVENTS = {
   FOOD_CONSUMED: 'food:consumed',
   POPULATION_CHANGED: 'population:changed',
   SIM_PAUSED: 'sim:paused',
-  SIM_RESUMED: 'sim:resumed'
+  SIM_RESUMED: 'sim:resumed',
 };
 
 // Create a singleton event emitter for the entire application
-export const eventEmitter = new EventSystem(); 
+export const eventEmitter = new EventSystem();
