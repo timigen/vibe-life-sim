@@ -69,6 +69,12 @@ export class RenderingSystem extends System {
       this.ctx.lineWidth = 1;
       this.ctx.stroke();
     }
+
+    // Display generation number
+    this.ctx.font = '10px Arial';
+    this.ctx.fillStyle = 'white';
+    this.ctx.textAlign = 'center';
+    this.ctx.fillText(`G${life.generation}`, comp.pos.x, comp.pos.y - life.radius - 5);
   }
 
   private drawFood(comp: PositionComponent, food: FoodComponent): void {

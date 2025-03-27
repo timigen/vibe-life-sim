@@ -11,7 +11,8 @@ export class LifeComponent extends Component {
     public age: number = 0,
     public restTimer: number = 0,
     public group: Group,
-    public sex: 'male' | 'female'
+    public sex: 'male' | 'female',
+    public generation: number = 0
   ) {
     super();
   }

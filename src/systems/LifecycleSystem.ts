@@ -38,8 +38,8 @@ export class LifecycleSystem extends System {
         if (currentGroupPopulation > groupStat.maxPopulation) {
           groupStat.maxPopulation = currentGroupPopulation;
         }
-        if (life.age > groupStat.highestGeneration) {
-          groupStat.highestGeneration = life.age;
+        if (life.generation > groupStat.highestGeneration) {
+          groupStat.highestGeneration = life.generation;
         }
       }
 
@@ -53,7 +53,13 @@ export class LifecycleSystem extends System {
           const newSex = Math.random() < 0.5 ? 'male' : 'female';
 
           // Spawn new life form
-          this.world.spawnLife(comp.pos.x + offsetX, comp.pos.y + offsetY, life.group, newSex);
+          this.world.spawnLife(
+            comp.pos.x + offsetX,
+            comp.pos.y + offsetY,
+            life.group,
+            newSex,
+            life.generation
+          );
 
           // Reset pregnancy
           life.isPregnant = false;

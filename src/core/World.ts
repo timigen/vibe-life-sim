@@ -29,8 +29,14 @@ export class World {
     eventEmitter.emit(EVENTS.FOOD_CREATED, { entity: foodEntity, position: { x, y } });
   }
 
-  spawnLife(x: number, y: number, group: Group, sex: 'male' | 'female'): Entity {
-    const entity = this.lifePool.spawn(x, y, group, sex);
+  spawnLife(
+    x: number,
+    y: number,
+    group: Group,
+    sex: 'male' | 'female',
+    parentGeneration: number = -1
+  ): Entity {
+    const entity = this.lifePool.spawn(x, y, group, sex, parentGeneration);
     entity.setWorld(this);
     this.addEntity(entity);
 

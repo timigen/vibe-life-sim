@@ -4,9 +4,9 @@ export let CANVAS_WIDTH = window.innerWidth;
 export let CANVAS_HEIGHT = window.innerHeight;
 
 // Game initialization constants
-export const INITIAL_POPULATION_PER_GROUP = 10;
-export const INITIAL_FOOD_COUNT = 100;
 export const NUMBER_OF_GROUPS = 2;
+export const INITIAL_POPULATION_PER_GROUP = 10;
+export const INITIAL_FOOD_COUNT = 20;
 
 // Array of groups with their respective colors
 export const GROUPS: Group[] = [

@@ -8,7 +8,7 @@ import { LIFE_CONFIG } from './config/LifeConfig';
 export interface IPool<T> {
   despawn(entity: T): void;
   getActiveCount(): number;
-  spawn(x: number, y: number, group: Group, sex: 'male' | 'female'): T;
+  spawn(x: number, y: number, group: Group, sex: 'male' | 'female', parentGeneration?: number): T;
 }
 
 export class LifePool implements IPool<Entity> {
@@ -40,13 +40,20 @@ export class LifePool implements IPool<Entity> {
         0,
         0,
         { color: '#000000', name: 'default' },
-        'male'
+        'male',
+        0
       )
     );
     return entity;
   }
 
-  spawn(x: number, y: number, group: Group, sex: 'male' | 'female'): Entity {
+  spawn(
+    x: number,
+    y: number,
+    group: Group,
+    sex: 'male' | 'female',
+    parentGeneration: number = -1
+  ): Entity {
     let entity: Entity;
 
     if (this.pool.length > 0) {
@@ -73,6 +80,7 @@ export class LifePool implements IPool<Entity> {
     life.restTimer = 0;
     life.group = group;
     life.sex = sex;
+    life.generation = parentGeneration === -1 ? 0 : parentGeneration + 1;
 
     this.activeEntities.add(entity);
     return entity;
