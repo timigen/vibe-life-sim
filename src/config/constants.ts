@@ -20,6 +20,9 @@ export class GameState {
   static lastTime = performance.now();
   static frameCount = 0;
   static fps = 0;
+  static avgFps = 0;
+  static fpsSamples = 0;
+  static totalFps = 0;
   static paused = false;
   static animationFrameId: number;
   static maxPopulation = 0;

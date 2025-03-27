@@ -24,6 +24,10 @@ export class UISystem extends System {
     
     if (now - this.lastFPSUpdate >= 1000) {
       GameState.fps = Math.round((this.frameCount * 1000) / (now - this.lastFPSUpdate));
+      // Update average FPS
+      GameState.totalFps += GameState.fps;
+      GameState.fpsSamples++;
+      GameState.avgFps = Math.round(GameState.totalFps / GameState.fpsSamples);
       this.frameCount = 0;
       this.lastFPSUpdate = now;
     }
@@ -60,7 +64,7 @@ export class UISystem extends System {
     document.getElementById('maxPopDisplay')!.textContent = GameState.maxPopulation.toString();
     document.getElementById('finalStarvationDeaths')!.textContent = GameState.deathsByStarvation.toString();
     document.getElementById('finalOldAgeDeaths')!.textContent = GameState.deathsByOldAge.toString();
-    document.getElementById('finalFPS')!.textContent = GameState.fps.toString();
+    document.getElementById('finalFPS')!.textContent = GameState.avgFps.toString();
     document.getElementById('gameOver')!.style.display = 'flex';
   }
 } 
