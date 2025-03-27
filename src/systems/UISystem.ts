@@ -46,7 +46,8 @@ export class UISystem extends System {
     // Update death counters
     document.getElementById('starvationDeaths')!.textContent =
       SimulationState.deathsByStarvation.toString();
-    document.getElementById('oldAgeDeaths')!.textContent = SimulationState.deathsByOldAge.toString();
+    document.getElementById('oldAgeDeaths')!.textContent =
+      SimulationState.deathsByOldAge.toString();
 
     // Update population count
     this.updateStats();
@@ -65,26 +66,35 @@ export class UISystem extends System {
   }
 
   showGameOver(): void {
-    document.getElementById('maxPopDisplay')!.textContent = SimulationState.maxPopulation.toString();
+    document.getElementById('maxPopDisplay')!.textContent =
+      SimulationState.maxPopulation.toString();
     document.getElementById('finalStarvationDeaths')!.textContent =
       SimulationState.deathsByStarvation.toString();
-    document.getElementById('finalOldAgeDeaths')!.textContent = SimulationState.deathsByOldAge.toString();
+    document.getElementById('finalOldAgeDeaths')!.textContent =
+      SimulationState.deathsByOldAge.toString();
     document.getElementById('finalFPS')!.textContent = SimulationState.avgFps.toString();
 
     // Display group statistics
     const groupStatsContainer = document.getElementById('groupStatsContainer');
     if (groupStatsContainer) {
       groupStatsContainer.innerHTML = '';
-      SimulationState.groupStats.forEach((stat: { color: string; name: string; maxPopulation: number; highestGeneration: number; }) => {
-        const statElement = document.createElement('div');
-        statElement.className = 'group-stat';
-        statElement.innerHTML = `
+      SimulationState.groupStats.forEach(
+        (stat: {
+          color: string;
+          name: string;
+          maxPopulation: number;
+          highestGeneration: number;
+        }) => {
+          const statElement = document.createElement('div');
+          statElement.className = 'group-stat';
+          statElement.innerHTML = `
           <div style="color: ${stat.color};">Group Name: ${stat.name}</div>
           <div>Max Population: ${stat.maxPopulation}</div>
           <div>Max Generation: ${stat.highestGeneration}</div>
         `;
-        groupStatsContainer.appendChild(statElement);
-      });
+          groupStatsContainer.appendChild(statElement);
+        }
+      );
     }
 
     document.getElementById('simulationOver')!.style.display = 'flex';

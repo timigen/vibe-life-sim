@@ -29,7 +29,10 @@ export class LifecycleSystem extends System {
       life.hunger += (life.restTimer > 0 ? 0.2 : 1) * deltaTime;
 
       // Update group stats
-      const groupStat = SimulationState.groupStats.find((stat: { color: string; name: string; maxPopulation: number; highestGeneration: number; }) => stat.color === life.group.color);
+      const groupStat = SimulationState.groupStats.find(
+        (stat: { color: string; name: string; maxPopulation: number; highestGeneration: number }) =>
+          stat.color === life.group.color
+      );
       if (groupStat) {
         const currentGroupPopulation = this.entities.filter(
           e => e.getComponent(LifeComponent)?.group.color === life.group.color
