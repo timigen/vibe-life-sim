@@ -113,6 +113,11 @@ window.addEventListener('keydown', event => {
   }
 });
 
+// Add click handler for the toggle button
+document.getElementById('toggleBtn')!.addEventListener('click', () => {
+  setPaused(!SimState.paused);
+});
+
 // Listen for population changes to end simulation when population is 0
 eventEmitter.on(EVENTS.POPULATION_CHANGED, async (data: any) => {
   if (data.population === 0) {
@@ -123,3 +128,6 @@ eventEmitter.on(EVENTS.POPULATION_CHANGED, async (data: any) => {
 // Initialize and start the simulation
 initializeSimulation();
 animate();
+
+// Initialize the toggle button state
+document.getElementById('toggleBtn')!.textContent = SimState.paused ? '▶️' : '⏸';
