@@ -22,6 +22,7 @@ import { CollisionSystem } from './systems/CollisionSystem';
 import { UISystem } from './systems/UISystem';
 
 // Global variables
+const TARGET_FRAME_TIME = 1000 / 60; // Target 60 FPS
 const canvas = document.getElementById('simCanvas') as HTMLCanvasElement;
 const ctx = canvas.getContext('2d')!;
 canvas.width = GameState.CANVAS_WIDTH;
@@ -36,7 +37,8 @@ world.addSystem(new LifecycleSystem(world, uiSystem));
 world.addSystem(new MatingSystem(world));
 world.addSystem(uiSystem);
 
-function initializeSimulation(): void {
+// Could be updated to load resources asynchronously
+async function initializeSimulation(): Promise<void> {
   // Initialize life forms
   for (const group of GROUPS) {
     for (let i = 0; i < INITIAL_POPULATION_PER_GROUP; i++) {
@@ -106,13 +108,22 @@ function update(deltaTime: number) {
   }
 }
 
-function animate() {
-  requestAnimationFrame(animate);
-  const now = performance.now();
-  const deltaTime = now - GameState.lastTime;
-  GameState.lastTime = now;
+async function animate(): Promise<void> {
+    while (!GameState.paused) {
+        const now = performance.now();
+        const deltaTime = now - GameState.lastTime;
+        
+        // Use setTimeout to maintain consistent frame rate
+        if (deltaTime < TARGET_FRAME_TIME) {
+            await new Promise(resolve => 
+                setTimeout(resolve, TARGET_FRAME_TIME - deltaTime)
+            );
+        }
 
-  update(deltaTime);
+        await update(deltaTime);
+        GameState.lastTime = performance.now();
+        requestAnimationFrame(animate);
+    }
 }
 
 window.addEventListener('resize', () => {

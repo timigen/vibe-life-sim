@@ -17,14 +17,27 @@ export class CollisionSystem extends System {
     return entity.hasComponent(LifeComponent) && entity.hasComponent(PositionComponent);
   }
 
-  update(deltaTime: number): void {
+  async update(deltaTime: number): Promise<void> {
+    const BATCH_SIZE = 100;
+    const entities = [...this.entities];
+
+    for (let i = 0; i < entities.length; i += BATCH_SIZE) {
+        const batch = entities.slice(i, i + BATCH_SIZE);
+        await this.processBatch(batch);
+        
+        // Allow other tasks to run between batches
+        await new Promise(resolve => setTimeout(resolve, 0));
+    }
+  }
+
+  private async processBatch(batch: Entity[]): Promise<void> {
     // Update spatial grid with current entity positions
-    this.spatialGrid.update(this.entities);
+    this.spatialGrid.update(batch);
 
     // Process collisions using spatial grid
     const processedPairs = new Set<string>();
 
-    for (const entityA of this.entities) {
+    for (const entityA of batch) {
       const potentialCollisions = this.spatialGrid.getPotentialCollisions(entityA);
 
       for (const entityB of potentialCollisions) {

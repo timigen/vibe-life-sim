@@ -6,6 +6,7 @@ export class UISystem extends System {
   private world: World;
   private lastFPSUpdate: number = 0;
   private frameCount: number = 0;
+  private updatePending: boolean = false;
 
   constructor(world: World) {
     super();
@@ -35,7 +36,20 @@ export class UISystem extends System {
     document.getElementById('oldAgeDeaths')!.textContent = GameState.deathsByOldAge.toString();
 
     // Update population count
-    document.getElementById('populationCount')!.textContent = this.world.getLifeCount().toString();
+    this.updateStats();
+  }
+
+  private async updateStats(): Promise<void> {
+    if (this.updatePending) return;
+    this.updatePending = true;
+
+    await new Promise(resolve => requestAnimationFrame(resolve));
+    
+    document.getElementById('populationCount')!.textContent = 
+        this.world.getLifeCount().toString();
+    // ... other UI updates ...
+
+    this.updatePending = false;
   }
 
   showGameOver(): void {
