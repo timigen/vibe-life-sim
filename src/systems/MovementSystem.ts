@@ -4,7 +4,7 @@ import { LifeComponent } from '../components/LifeComponent';
 import { PositionComponent } from '../components/PositionComponent';
 import { LIFE_CONFIG } from '../config/LifeConfig';
 import { Vector2D } from '../utils/Vector2D';
-import { GameUtils } from '../utils/GameUtils';
+import { SimUtils } from '../utils/SimUtils';
 
 export class MovementSystem extends System {
   shouldProcessEntity(entity: Entity): boolean {
@@ -21,8 +21,8 @@ export class MovementSystem extends System {
 
       // Random movement when no target
       if (Math.random() < 0.02) {
-        const angle = GameUtils.getRandomAngle();
-        const speed = GameUtils.getRandomSpeed(LIFE_CONFIG.SPEED);
+        const angle = SimUtils.getRandomAngle();
+        const speed = SimUtils.getRandomSpeed(LIFE_CONFIG.SPEED);
         position.velocity = new Vector2D(Math.cos(angle) * speed, Math.sin(angle) * speed);
       }
 
@@ -31,7 +31,7 @@ export class MovementSystem extends System {
       position.position.y += position.velocity.y * deltaTime;
 
       // Keep within bounds
-      const clampedPosition = GameUtils.clampPosition(position.position, life.radius);
+      const clampedPosition = SimUtils.clampPosition(position.position, life.radius);
       position.position = clampedPosition;
     }
   }

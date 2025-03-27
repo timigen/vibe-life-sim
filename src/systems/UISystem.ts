@@ -1,5 +1,5 @@
+import { SimState } from '../config/SimState';
 import { System } from '../ecs/System';
-import { SimulationState } from '../config/constants';
 import { World } from '../ecs/World';
 
 export class UISystem extends System {
@@ -27,27 +27,26 @@ export class UISystem extends System {
     document.getElementById('fpsCounter')!.textContent = currentFps.toString();
 
     if (now - this.lastFPSUpdate >= 1000) {
-      SimulationState.fps = currentFps;
+      SimState.fps = currentFps;
       // Update average FPS
-      SimulationState.totalFps += SimulationState.fps;
-      SimulationState.fpsSamples++;
-      SimulationState.avgFps = Math.round(SimulationState.totalFps / SimulationState.fpsSamples);
+      SimState.totalFps += SimState.fps;
+      SimState.fpsSamples++;
+      SimState.avgFps = Math.round(SimState.totalFps / SimState.fpsSamples);
       this.frameCount = 0;
       this.lastFPSUpdate = now;
     }
 
     // Update FPS display
-    document.getElementById('fpsCounter')!.textContent = SimulationState.fps.toString();
+    document.getElementById('fpsCounter')!.textContent = SimState.fps.toString();
 
     // Update canvas dimensions
     document.getElementById('canvasDimensions')!.textContent =
-      `${SimulationState.CANVAS_WIDTH}x${SimulationState.CANVAS_HEIGHT}`;
+      `${SimState.CANVAS_WIDTH}x${SimState.CANVAS_HEIGHT}`;
 
     // Update death counters
     document.getElementById('starvationDeaths')!.textContent =
-      SimulationState.deathsByStarvation.toString();
-    document.getElementById('oldAgeDeaths')!.textContent =
-      SimulationState.deathsByOldAge.toString();
+      SimState.deathsByStarvation.toString();
+    document.getElementById('oldAgeDeaths')!.textContent = SimState.deathsByOldAge.toString();
 
     // Update population count
     this.updateStats();
@@ -66,19 +65,17 @@ export class UISystem extends System {
   }
 
   showGameOver(): void {
-    document.getElementById('maxPopDisplay')!.textContent =
-      SimulationState.maxPopulation.toString();
+    document.getElementById('maxPopDisplay')!.textContent = SimState.maxPopulation.toString();
     document.getElementById('finalStarvationDeaths')!.textContent =
-      SimulationState.deathsByStarvation.toString();
-    document.getElementById('finalOldAgeDeaths')!.textContent =
-      SimulationState.deathsByOldAge.toString();
-    document.getElementById('finalFPS')!.textContent = SimulationState.avgFps.toString();
+      SimState.deathsByStarvation.toString();
+    document.getElementById('finalOldAgeDeaths')!.textContent = SimState.deathsByOldAge.toString();
+    document.getElementById('finalFPS')!.textContent = SimState.avgFps.toString();
 
     // Display group statistics
     const groupStatsContainer = document.getElementById('groupStatsContainer');
     if (groupStatsContainer) {
       groupStatsContainer.innerHTML = '';
-      SimulationState.groupStats.forEach(
+      SimState.groupStats.forEach(
         (stat: {
           color: string;
           name: string;

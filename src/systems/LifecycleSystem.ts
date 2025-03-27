@@ -4,8 +4,8 @@ import { LifeComponent } from '../components/LifeComponent';
 import { PositionComponent } from '../components/PositionComponent';
 import { LIFE_CONFIG } from '../config/LifeConfig';
 import { World } from '../ecs/World';
-import { SimulationState } from '../config/constants';
 import { UISystem } from './UISystem';
+import { SimState } from '../config/SimState';
 
 export class LifecycleSystem extends System {
   constructor(
@@ -29,7 +29,7 @@ export class LifecycleSystem extends System {
       life.hunger += (life.restTimer > 0 ? 0.2 : 1) * deltaTime;
 
       // Update group stats
-      const groupStat = SimulationState.groupStats.find(
+      const groupStat = SimState.groupStats.find(
         (stat: { color: string; name: string; maxPopulation: number; highestGeneration: number }) =>
           stat.color === life.group.color
       );
@@ -70,12 +70,12 @@ export class LifecycleSystem extends System {
 
       if (life.age > LIFE_CONFIG.AGE_LIMIT) {
         life.dead = true;
-        SimulationState.deathsByOldAge++;
+        SimState.deathsByOldAge++;
       }
 
       if (life.hunger > LIFE_CONFIG.HUNGER_LIMIT) {
         life.dead = true;
-        SimulationState.deathsByStarvation++;
+        SimState.deathsByStarvation++;
       }
 
       if (life.dead) {
@@ -88,8 +88,8 @@ export class LifecycleSystem extends System {
 
     // Update max population
     const currentPopulation = this.world.getLifeCount();
-    if (currentPopulation > SimulationState.maxPopulation) {
-      SimulationState.maxPopulation = currentPopulation;
+    if (currentPopulation > SimState.maxPopulation) {
+      SimState.maxPopulation = currentPopulation;
     }
 
     // Check for simulation over
