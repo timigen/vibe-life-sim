@@ -10,7 +10,7 @@ import { MatingSystem } from './systems/MatingSystem';
 import { SimUtils } from './utils/SimUtils';
 import { CollisionSystem } from './systems/CollisionSystem';
 import { UISystem } from './systems/UISystem';
-import { World } from './core/ecs/World';
+import { World } from './core/World';
 import { SimState } from './core/config/SimState';
 import { LIFE_CONFIG } from './core/config/LifeConfig';
 
@@ -91,13 +91,13 @@ function update(deltaTime: number) {
 
   processEating();
 
-  if (world.getLifeCount() === 0) {
+  if (world.getPopulation() === 0) {
     SimState.paused = true;
     return;
   }
 
-  if (world.getLifeCount() > SimState.maxPopulation) {
-    SimState.maxPopulation = world.getLifeCount();
+  if (world.getPopulation() > SimState.maxPopulation) {
+    SimState.maxPopulation = world.getPopulation();
   }
 }
 

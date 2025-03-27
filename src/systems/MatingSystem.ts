@@ -3,7 +3,7 @@ import { PositionComponent } from '../components/PositionComponent';
 import { LIFE_CONFIG } from '../core/config/LifeConfig';
 import { Entity } from '../core/ecs/Entity';
 import { System } from '../core/ecs/System';
-import { World } from '../core/ecs/World';
+import { World } from '../core/World';
 
 export class MatingSystem extends System {
   constructor(private world: World) {

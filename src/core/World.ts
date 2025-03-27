@@ -1,12 +1,12 @@
-import { Entity } from './Entity';
-import { System } from './System';
-import { LifePool } from './LifePool';
-import { Group } from '../types/Group';
-import { LifeComponent } from '../../components/LifeComponent';
-import { FoodComponent } from '../../components/FoodComponent';
-import { PositionComponent } from '../../components/PositionComponent';
-import { FOOD_CONFIG } from '../config/FoodConfig';
-import { Vector2D } from '../Vector2D';
+import { Entity } from './ecs/Entity';
+import { System } from './ecs/System';
+import { LifePool } from './ecs/LifePool';
+import { Group } from './types/Group';
+import { LifeComponent } from '../components/LifeComponent';
+import { FoodComponent } from '../components/FoodComponent';
+import { PositionComponent } from '../components/PositionComponent';
+import { FOOD_CONFIG } from './config/FoodConfig';
+import { Vector2D } from './Vector2D';
 
 export class World {
   private entities: Entity[] = [];
@@ -80,7 +80,7 @@ export class World {
     return this.entities.filter(entity => entity.hasComponent(FoodComponent));
   }
 
-  getLifeCount(): number {
+  getPopulation(): number {
     return this.lifePool.getActiveCount();
   }
 }

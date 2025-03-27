@@ -1,6 +1,6 @@
 import { SimState } from '../core/config/SimState';
 import { System } from '../core/ecs/System';
-import { World } from '../core/ecs/World';
+import { World } from '../core/World';
 
 export class UISystem extends System {
   private world: World;
@@ -58,7 +58,7 @@ export class UISystem extends System {
 
     await new Promise(resolve => requestAnimationFrame(resolve));
 
-    document.getElementById('populationCount')!.textContent = this.world.getLifeCount().toString();
+    document.getElementById('populationCount')!.textContent = this.world.getPopulation().toString();
     // ... other UI updates ...
 
     this.updatePending = false;
@@ -86,7 +86,7 @@ export class UISystem extends System {
           statElement.className = 'group-stat';
           statElement.innerHTML = `
           <div style="color: ${stat.color};">Group Name: ${stat.name}</div>
-          <div>Max Population: ${stat.maxPopulation}</div>
+          <div>Max Pop: ${stat.maxPopulation}</div>
           <div>Max Generation: ${stat.highestGeneration}</div>
         `;
           groupStatsContainer.appendChild(statElement);

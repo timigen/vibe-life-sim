@@ -2,7 +2,7 @@ import { LifeComponent } from '../components/LifeComponent';
 import { PositionComponent } from '../components/PositionComponent';
 import { UISystem } from './UISystem';
 import { System } from '../core/ecs/System';
-import { World } from '../core/ecs/World';
+import { World } from '../core/World';
 import { Entity } from '../core/ecs/Entity';
 import { SimState } from '../core/config/SimState';
 import { LIFE_CONFIG } from '../core/config/LifeConfig';
@@ -87,7 +87,7 @@ export class LifecycleSystem extends System {
     }
 
     // Update max population
-    const currentPopulation = this.world.getLifeCount();
+    const currentPopulation = this.world.getPopulation();
     if (currentPopulation > SimState.maxPopulation) {
       SimState.maxPopulation = currentPopulation;
     }

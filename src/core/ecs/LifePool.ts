@@ -5,7 +5,14 @@ import { Group } from '../types/Group';
 import { Vector2D } from '../Vector2D';
 import { LIFE_CONFIG } from '../config/LifeConfig';
 
-export class LifePool {
+
+export interface IPool<T> {
+  despawn(entity: T): void
+  getActiveCount(): number
+  spawn(x: number, y: number, group: Group, sex: 'male' | 'female'): T
+}
+
+export class LifePool implements IPool<Entity> {
   private pool: Entity[] = [];
   private activeEntities: Set<Entity> = new Set();
   private initialSize: number;
