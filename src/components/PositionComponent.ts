@@ -3,8 +3,8 @@ import { Vector2D } from '../core/Vector2D';
 
 export class PositionComponent extends Component {
   constructor(
-    public position: Vector2D,
-    public velocity: Vector2D = new Vector2D(0, 0)
+    public pos: Vector2D,
+    public vel: Vector2D = new Vector2D(0, 0)
   ) {
     super();
   }

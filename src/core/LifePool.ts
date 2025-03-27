@@ -1,9 +1,9 @@
-import { Entity } from './Entity';
-import { LifeComponent } from '../../components/LifeComponent';
-import { PositionComponent } from '../../components/PositionComponent';
-import { Group } from '../types/Group';
-import { Vector2D } from '../Vector2D';
-import { LIFE_CONFIG } from '../config/LifeConfig';
+import { Entity } from './ecs/Entity';
+import { LifeComponent } from '../components/LifeComponent';
+import { PositionComponent } from '../components/PositionComponent';
+import { Group } from './types/Group';
+import { Vector2D } from './Vector2D';
+import { LIFE_CONFIG } from './config/LifeConfig';
 
 
 export interface IPool<T> {
@@ -56,13 +56,13 @@ export class LifePool implements IPool<Entity> {
       entity = this.createNewEntity();
     }
 
-    const position = entity.getComponent(PositionComponent) as PositionComponent;
+    const comp = entity.getComponent(PositionComponent) as PositionComponent;
     const life = entity.getComponent(LifeComponent) as LifeComponent;
 
     // Reset position
-    position.position.x = x;
-    position.position.y = y;
-    position.velocity = new Vector2D(0, 0);
+    comp.pos.x = x;
+    comp.pos.y = y;
+    comp.vel = new Vector2D(0, 0);
 
     // Reset life properties
     life.radius = LIFE_CONFIG.INITIAL_RADIUS;

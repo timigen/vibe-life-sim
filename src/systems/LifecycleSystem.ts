@@ -49,15 +49,15 @@ export class LifecycleSystem extends System {
       if (life.sex === 'female' && life.isPregnant) {
         life.gestationTimer -= deltaTime;
         if (life.gestationTimer <= 0) {
-          const position = entity.getComponent(PositionComponent)!;
+          const comp = entity.getComponent(PositionComponent)!;
           const offsetX = (Math.random() - 0.5) * 10;
           const offsetY = (Math.random() - 0.5) * 10;
           const newSex = Math.random() < 0.5 ? 'male' : 'female';
 
           // Spawn new life form
           this.world.spawnLife(
-            position.position.x + offsetX,
-            position.position.y + offsetY,
+            comp.pos.x + offsetX,
+            comp.pos.y + offsetY,
             life.group,
             newSex
           );
@@ -80,8 +80,8 @@ export class LifecycleSystem extends System {
 
       if (life.dead) {
         // Convert to food
-        const position = entity.getComponent(PositionComponent)!;
-        this.world.spawnFood(position.position.x, position.position.y);
+        const comp = entity.getComponent(PositionComponent)!;
+        this.world.spawnFood(comp.pos.x, comp.pos.y);
         this.world.removeLife(entity);
       }
     }

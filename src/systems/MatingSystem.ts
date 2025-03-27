@@ -39,7 +39,7 @@ export class MatingSystem extends System {
           if (!female.isPregnant) {
             const aPos = aEntity.getComponent(PositionComponent)!;
             const bPos = bEntity.getComponent(PositionComponent)!;
-            const distance = aPos.position.distanceTo(bPos.position);
+            const distance = aPos.pos.distanceTo(bPos.pos);
 
             if (distance < LIFE_CONFIG.MATING_DISTANCE) {
               female.isPregnant = true;

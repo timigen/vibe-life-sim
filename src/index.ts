@@ -70,7 +70,7 @@ function processEating(): void {
       const life = lifeEntity.getComponent(LifeComponent)!;
       const lifePos = lifeEntity.getComponent(PositionComponent)!;
 
-      if (lifePos.position.distanceTo(foodPos.position) < life.radius + foodComponent.radius) {
+      if (lifePos.pos.distanceTo(foodPos.pos) < life.radius + foodComponent.radius) {
         life.hunger = -LIFE_CONFIG.FULLNESS_DURATION;
         life.radius = Math.min(life.radius + LIFE_CONFIG.SIZE_INCREMENT, LIFE_CONFIG.MAX_RADIUS);
 

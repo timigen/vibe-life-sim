@@ -54,24 +54,24 @@ export class CollisionSystem extends System {
         if (!lifeA || !lifeB || !posA || !posB) continue;
         if (lifeA.dead || lifeB.dead) continue;
 
-        const distance = posA.position.distanceTo(posB.position);
+        const distance = posA.pos.distanceTo(posB.pos);
         const minDistance = lifeA.radius + lifeB.radius;
 
         if (distance < minDistance) {
           // Calculate collision response
           const overlap = minDistance - distance;
           const direction = new Vector2D(
-            posB.position.x - posA.position.x,
-            posB.position.y - posA.position.y
+            posB.pos.x - posA.pos.x,
+            posB.pos.y - posA.pos.y
           ).normalize();
 
           // Move entities apart
           const moveAmount = direction.clone().multiply(overlap / 2);
-          posA.position = posA.position.clone().subtract(moveAmount);
-          posB.position = posB.position.clone().add(moveAmount);
+          posA.pos = posA.pos.clone().subtract(moveAmount);
+          posB.pos = posB.pos.clone().add(moveAmount);
 
           // Adjust velocities for bouncing effect
-          const relativeVelocity = posA.velocity.clone().subtract(posB.velocity);
+          const relativeVelocity = posA.vel.clone().subtract(posB.vel);
           const normalVelocity = relativeVelocity.dot(direction);
 
           if (normalVelocity > 0) {
@@ -79,8 +79,8 @@ export class CollisionSystem extends System {
             const impulse = normalVelocity * restitution;
 
             const impulseVector = direction.clone().multiply(impulse);
-            posA.velocity = posA.velocity.clone().subtract(impulseVector);
-            posB.velocity = posB.velocity.clone().add(impulseVector);
+            posA.vel = posA.vel.clone().subtract(impulseVector);
+            posB.vel = posB.vel.clone().add(impulseVector);
           }
         }
       }

@@ -1,6 +1,6 @@
 import { Entity } from './ecs/Entity';
 import { System } from './ecs/System';
-import { LifePool } from './ecs/LifePool';
+import { LifePool } from './LifePool';
 import { Group } from './types/Group';
 import { LifeComponent } from '../components/LifeComponent';
 import { FoodComponent } from '../components/FoodComponent';
@@ -31,10 +31,10 @@ export class World {
   }
 
   removeLife(entity: Entity): void {
-    const position = entity.getComponent(PositionComponent) as PositionComponent;
-    if (position) {
+    const comp = entity.getComponent(PositionComponent) as PositionComponent;
+    if (comp) {
       // Spawn food at the death location
-      this.spawnFood(position.position.x, position.position.y);
+      this.spawnFood(comp.pos.x, comp.pos.y);
     }
     this.removeEntity(entity);
     this.lifePool.despawn(entity);

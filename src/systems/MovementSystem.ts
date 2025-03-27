@@ -23,16 +23,16 @@ export class MovementSystem extends System {
       if (Math.random() < 0.02) {
         const angle = SimUtils.getRandomAngle();
         const speed = SimUtils.getRandomSpeed(LIFE_CONFIG.SPEED);
-        position.velocity = new Vector2D(Math.cos(angle) * speed, Math.sin(angle) * speed);
+        position.vel = new Vector2D(Math.cos(angle) * speed, Math.sin(angle) * speed);
       }
 
       // Update position using deltaTime
-      position.position.x += position.velocity.x * deltaTime;
-      position.position.y += position.velocity.y * deltaTime;
+      position.pos.x += position.vel.x * deltaTime;
+      position.pos.y += position.vel.y * deltaTime;
 
       // Keep within bounds
-      const clampedPosition = SimUtils.clampPosition(position.position, life.radius);
-      position.position = clampedPosition;
+      const clampedPosition = SimUtils.clampPosition(position.pos, life.radius);
+      position.pos = clampedPosition;
     }
   }
 }

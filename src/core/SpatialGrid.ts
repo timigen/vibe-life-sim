@@ -17,15 +17,15 @@ export class SpatialGrid {
   }
 
   private getEntityCells(entity: Entity): string[] {
-    const position = entity.getComponent(PositionComponent);
+    const component = entity.getComponent(PositionComponent);
     const life = entity.getComponent(LifeComponent);
-    if (!position || !life) return [];
+    if (!component || !life) return [];
 
     const radius = life.radius;
-    const minX = Math.floor((position.position.x - radius) / this.cellSize);
-    const maxX = Math.floor((position.position.x + radius) / this.cellSize);
-    const minY = Math.floor((position.position.y - radius) / this.cellSize);
-    const maxY = Math.floor((position.position.y + radius) / this.cellSize);
+    const minX = Math.floor((component.pos.x - radius) / this.cellSize);
+    const maxX = Math.floor((component.pos.x + radius) / this.cellSize);
+    const minY = Math.floor((component.pos.y - radius) / this.cellSize);
+    const maxY = Math.floor((component.pos.y + radius) / this.cellSize);
 
     const cells: string[] = [];
     for (let x = minX; x <= maxX; x++) {
