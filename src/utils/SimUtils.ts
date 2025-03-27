@@ -1,4 +1,4 @@
-import { SimState } from '../config/SimState';
+import { SimState } from '../core/config/SimState';
 import { Vector2D } from './Vector2D';
 
 export class SimUtils {

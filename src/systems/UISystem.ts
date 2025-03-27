@@ -1,4 +1,4 @@
-import { SimState } from '../config/SimState';
+import { SimState } from '../core/config/SimState';
 import { System } from '../core/ecs/System';
 import { World } from '../core/ecs/World';
 

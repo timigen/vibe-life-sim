@@ -2,8 +2,8 @@ import { Entity } from './Entity';
 import { LifeComponent } from '../../components/LifeComponent';
 import { PositionComponent } from '../../components/PositionComponent';
 import { Group } from '../../types/Group';
-import { LIFE_CONFIG } from '../../config/LifeConfig';
 import { Vector2D } from '../../utils/Vector2D';
+import { LIFE_CONFIG } from '../config/LifeConfig';
 
 export class LifePool {
   private pool: Entity[] = [];

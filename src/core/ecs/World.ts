@@ -5,7 +5,7 @@ import { Group } from '../../types/Group';
 import { LifeComponent } from '../../components/LifeComponent';
 import { FoodComponent } from '../../components/FoodComponent';
 import { PositionComponent } from '../../components/PositionComponent';
-import { FOOD_CONFIG } from '../../config/FoodConfig';
+import { FOOD_CONFIG } from '../config/FoodConfig';
 import { Vector2D } from '../../utils/Vector2D';
 
 export class World {

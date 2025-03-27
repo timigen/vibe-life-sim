@@ -1,4 +1,4 @@
-import { FoodConfig as IFoodConfig } from '../types/FoodConfig';
+import { FoodConfig as IFoodConfig } from '../../types/FoodConfig';
 
 export const FOOD_CONFIG: IFoodConfig = {
   RADIUS: 3,

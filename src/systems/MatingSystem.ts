@@ -1,6 +1,6 @@
 import { LifeComponent } from '../components/LifeComponent';
 import { PositionComponent } from '../components/PositionComponent';
-import { LIFE_CONFIG } from '../config/LifeConfig';
+import { LIFE_CONFIG } from '../core/config/LifeConfig';
 import { Entity } from '../core/ecs/Entity';
 import { System } from '../core/ecs/System';
 import { World } from '../core/ecs/World';

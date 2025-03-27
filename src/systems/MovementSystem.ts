@@ -1,10 +1,10 @@
 import { LifeComponent } from '../components/LifeComponent';
 import { PositionComponent } from '../components/PositionComponent';
-import { LIFE_CONFIG } from '../config/LifeConfig';
 import { Vector2D } from '../utils/Vector2D';
 import { SimUtils } from '../utils/SimUtils';
 import { System } from '../core/ecs/System';
 import { Entity } from '../core/ecs/Entity';
+import { LIFE_CONFIG } from '../core/config/LifeConfig';
 
 export class MovementSystem extends System {
   shouldProcessEntity(entity: Entity): boolean {
