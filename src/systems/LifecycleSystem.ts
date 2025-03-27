@@ -30,7 +30,7 @@ export class LifecycleSystem extends System {
           const offsetX = (Math.random() - 0.5) * 10;
           const offsetY = (Math.random() - 0.5) * 10;
           const newSex = Math.random() < 0.5 ? 'male' : 'female';
-          
+
           // Spawn new life form
           this.world.spawnLife(
             position.position.x + offsetX,
@@ -38,7 +38,7 @@ export class LifecycleSystem extends System {
             life.group,
             newSex
           );
-          
+
           // Reset pregnancy
           life.isPregnant = false;
           life.gestationTimer = 0;

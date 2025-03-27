@@ -24,23 +24,25 @@ export class LifePool {
   private createNewEntity(): Entity {
     const entity = new Entity();
     entity.addComponent(new PositionComponent(new Vector2D(0, 0)));
-    entity.addComponent(new LifeComponent(
-      LIFE_CONFIG.INITIAL_RADIUS,
-      0,
-      false,
-      0,
-      false,
-      0,
-      0,
-      { color: '#000000' },
-      'male'
-    ));
+    entity.addComponent(
+      new LifeComponent(
+        LIFE_CONFIG.INITIAL_RADIUS,
+        0,
+        false,
+        0,
+        false,
+        0,
+        0,
+        { color: '#000000' },
+        'male'
+      )
+    );
     return entity;
   }
 
   spawn(x: number, y: number, group: Group, sex: 'male' | 'female'): Entity {
     let entity: Entity;
-    
+
     if (this.pool.length > 0) {
       entity = this.pool.pop()!;
     } else {
@@ -88,4 +90,4 @@ export class LifePool {
   getPoolSize(): number {
     return this.pool.length;
   }
-} 
+}

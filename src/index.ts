@@ -83,17 +83,17 @@ function processEating(): void {
   for (let i = foods.length - 1; i >= 0; i--) {
     const food = foods[i];
     const foodPos = food.getComponent(PositionComponent)!;
-    
+
     for (const entity of entities) {
       if (!entity.hasComponent(LifeComponent)) continue;
-      
+
       const life = entity.getComponent(LifeComponent)!;
       const lifePos = entity.getComponent(PositionComponent)!;
-      
+
       if (lifePos.position.distanceTo(foodPos.position) < life.radius + FOOD_CONFIG.RADIUS) {
         life.hunger = -LIFE_CONFIG.FULLNESS_DURATION;
         life.radius = Math.min(life.radius + LIFE_CONFIG.SIZE_INCREMENT, LIFE_CONFIG.MAX_RADIUS);
-        
+
         world.removeEntity(food);
         foods.splice(i, 1);
         break;
@@ -145,10 +145,10 @@ function render() {
   const entities = world.getEntities();
   for (const entity of entities) {
     if (!entity.hasComponent(LifeComponent)) continue;
-    
+
     const life = entity.getComponent(LifeComponent)!;
     const position = entity.getComponent(PositionComponent)!;
-    
+
     ctx.beginPath();
     ctx.arc(position.position.x, position.position.y, life.radius, 0, Math.PI * 2);
     ctx.fillStyle = life.group.color;
