@@ -31,6 +31,10 @@ export class UISystem extends System {
     // Update FPS display
     document.getElementById('fpsCounter')!.textContent = GameState.fps.toString();
 
+    // Update canvas dimensions
+    document.getElementById('canvasDimensions')!.textContent = 
+        `${GameState.CANVAS_WIDTH}x${GameState.CANVAS_HEIGHT}`;
+
     // Update death counters
     document.getElementById('starvationDeaths')!.textContent = GameState.deathsByStarvation.toString();
     document.getElementById('oldAgeDeaths')!.textContent = GameState.deathsByOldAge.toString();
