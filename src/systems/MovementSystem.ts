@@ -1,6 +1,6 @@
 import { LifeComponent } from '../components/LifeComponent';
 import { PositionComponent } from '../components/PositionComponent';
-import { Vector2D } from '../utils/Vector2D';
+import { Vector2D } from '../core/Vector2D';
 import { SimUtils } from '../utils/SimUtils';
 import { System } from '../core/ecs/System';
 import { Entity } from '../core/ecs/Entity';

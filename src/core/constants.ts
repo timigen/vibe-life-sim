@@ -1,4 +1,4 @@
-import { Group } from '../types/Group';
+import { Group } from './types/Group';
 
 // Game initialization constants
 export const INITIAL_POPULATION_PER_GROUP = 6;

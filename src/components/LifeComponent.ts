@@ -1,5 +1,5 @@
 import { Component } from '../core/ecs/Component';
-import { Group } from '../types/Group';
+import { Group } from '../core/types/Group';
 
 export class LifeComponent extends Component {
   constructor(

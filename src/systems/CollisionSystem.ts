@@ -1,7 +1,7 @@
 import { LifeComponent } from '../components/LifeComponent';
 import { PositionComponent } from '../components/PositionComponent';
-import { Vector2D } from '../utils/Vector2D';
-import { SpatialGrid } from '../utils/SpatialGrid';
+import { Vector2D } from '../core/Vector2D';
+import { SpatialGrid } from '../core/SpatialGrid';
 import { System } from '../core/ecs/System';
 import { Entity } from '../core/ecs/Entity';
 

@@ -1,5 +1,5 @@
 import { SimState } from '../core/config/SimState';
-import { Vector2D } from './Vector2D';
+import { Vector2D } from '../core/Vector2D';
 
 export class SimUtils {
   static getRandomPosition(minRadius: number): Vector2D {
