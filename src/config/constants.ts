@@ -1,12 +1,12 @@
 // Game initialization constants
 // Initial population per group
-export const INITIAL_POPULATION_PER_GROUP = 50;
+export const INITIAL_POPULATION_PER_GROUP = 20;
 
 // Initial food count in the simulation
-export const INITIAL_FOOD_COUNT = 140;
+export const INITIAL_FOOD_COUNT = 150;
 
 // Number of groups in the simulation
-export const NUMBER_OF_GROUPS = 3;
+export const NUMBER_OF_GROUPS = 2;
 
 // Interface for defining a group
 export interface Group {
