@@ -1,4 +1,4 @@
-import { Component } from '../ecs/Component';
+import { Component } from '../core/ecs/Component';
 import { Vector2D } from '../utils/Vector2D';
 
 export class PositionComponent extends Component {

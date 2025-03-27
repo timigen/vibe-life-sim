@@ -1,6 +1,6 @@
 import { SimState } from '../config/SimState';
-import { System } from '../ecs/System';
-import { World } from '../ecs/World';
+import { System } from '../core/ecs/System';
+import { World } from '../core/ecs/World';
 
 export class UISystem extends System {
   private world: World;

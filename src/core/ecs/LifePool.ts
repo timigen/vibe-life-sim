@@ -1,9 +1,9 @@
 import { Entity } from './Entity';
-import { LifeComponent } from '../components/LifeComponent';
-import { PositionComponent } from '../components/PositionComponent';
-import { Group } from '../types/Group';
-import { LIFE_CONFIG } from '../config/LifeConfig';
-import { Vector2D } from '../utils/Vector2D';
+import { LifeComponent } from '../../components/LifeComponent';
+import { PositionComponent } from '../../components/PositionComponent';
+import { Group } from '../../types/Group';
+import { LIFE_CONFIG } from '../../config/LifeConfig';
+import { Vector2D } from '../../utils/Vector2D';
 
 export class LifePool {
   private pool: Entity[] = [];
@@ -49,8 +49,8 @@ export class LifePool {
       entity = this.createNewEntity();
     }
 
-    const position = entity.getComponent(PositionComponent)!;
-    const life = entity.getComponent(LifeComponent)!;
+    const position = entity.getComponent(PositionComponent) as PositionComponent;
+    const life = entity.getComponent(LifeComponent) as LifeComponent;
 
     // Reset position
     position.position.x = x;

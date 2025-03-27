@@ -1,8 +1,8 @@
-import { System } from '../ecs/System';
-import { Entity } from '../ecs/Entity';
 import { PositionComponent } from '../components/PositionComponent';
 import { LifeComponent } from '../components/LifeComponent';
 import { FoodComponent } from '../components/FoodComponent';
+import { Entity } from '../core/ecs/Entity';
+import { System } from '../core/ecs/System';
 
 export class RenderingSystem extends System {
   constructor(private ctx: CanvasRenderingContext2D) {

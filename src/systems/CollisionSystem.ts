@@ -1,9 +1,9 @@
-import { System } from '../ecs/System';
-import { Entity } from '../ecs/Entity';
 import { LifeComponent } from '../components/LifeComponent';
 import { PositionComponent } from '../components/PositionComponent';
 import { Vector2D } from '../utils/Vector2D';
 import { SpatialGrid } from '../utils/SpatialGrid';
+import { System } from '../core/ecs/System';
+import { Entity } from '../core/ecs/Entity';
 
 export class CollisionSystem extends System {
   private spatialGrid: SpatialGrid;

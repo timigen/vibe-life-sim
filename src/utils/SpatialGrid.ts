@@ -1,6 +1,6 @@
-import { Entity } from '../ecs/Entity';
 import { PositionComponent } from '../components/PositionComponent';
 import { LifeComponent } from '../components/LifeComponent';
+import { Entity } from '../core/ecs/Entity';
 
 export class SpatialGrid {
   private grid: Map<string, Set<Entity>> = new Map();

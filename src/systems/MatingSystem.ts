@@ -1,9 +1,9 @@
-import { System } from '../ecs/System';
-import { Entity } from '../ecs/Entity';
 import { LifeComponent } from '../components/LifeComponent';
 import { PositionComponent } from '../components/PositionComponent';
 import { LIFE_CONFIG } from '../config/LifeConfig';
-import { World } from '../ecs/World';
+import { Entity } from '../core/ecs/Entity';
+import { System } from '../core/ecs/System';
+import { World } from '../core/ecs/World';
 
 export class MatingSystem extends System {
   constructor(private world: World) {

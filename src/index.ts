@@ -1,7 +1,6 @@
 import { LIFE_CONFIG } from './config/LifeConfig';
 import { FOOD_CONFIG } from './config/FoodConfig';
 import { INITIAL_POPULATION_PER_GROUP, INITIAL_FOOD_COUNT, GROUPS } from './config/constants';
-import { World } from './ecs/World';
 import { FoodComponent } from './components/FoodComponent';
 import { PositionComponent } from './components/PositionComponent';
 import { LifeComponent } from './components/LifeComponent';
@@ -13,6 +12,7 @@ import { SimUtils } from './utils/SimUtils';
 import { CollisionSystem } from './systems/CollisionSystem';
 import { UISystem } from './systems/UISystem';
 import { SimState } from './config/SimState';
+import { World } from './core/ecs/World';
 
 // Global variables
 const TARGET_FRAME_TIME = 1000 / 60; // Target 60 FPS

@@ -1,11 +1,11 @@
-import { System } from '../ecs/System';
-import { Entity } from '../ecs/Entity';
 import { LifeComponent } from '../components/LifeComponent';
 import { PositionComponent } from '../components/PositionComponent';
 import { LIFE_CONFIG } from '../config/LifeConfig';
-import { World } from '../ecs/World';
 import { UISystem } from './UISystem';
 import { SimState } from '../config/SimState';
+import { System } from '../core/ecs/System';
+import { World } from '../core/ecs/World';
+import { Entity } from '../core/ecs/Entity';
 
 export class LifecycleSystem extends System {
   constructor(

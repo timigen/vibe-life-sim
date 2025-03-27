@@ -1,12 +1,12 @@
 import { Entity } from './Entity';
 import { System } from './System';
 import { LifePool } from './LifePool';
-import { Group } from '../types/Group';
-import { LifeComponent } from '../components/LifeComponent';
-import { FoodComponent } from '../components/FoodComponent';
-import { PositionComponent } from '../components/PositionComponent';
-import { FOOD_CONFIG } from '../config/FoodConfig';
-import { Vector2D } from '../utils/Vector2D';
+import { Group } from '../../types/Group';
+import { LifeComponent } from '../../components/LifeComponent';
+import { FoodComponent } from '../../components/FoodComponent';
+import { PositionComponent } from '../../components/PositionComponent';
+import { FOOD_CONFIG } from '../../config/FoodConfig';
+import { Vector2D } from '../../utils/Vector2D';
 
 export class World {
   private entities: Entity[] = [];
@@ -31,7 +31,7 @@ export class World {
   }
 
   removeLife(entity: Entity): void {
-    const position = entity.getComponent(PositionComponent);
+    const position = entity.getComponent(PositionComponent) as PositionComponent;
     if (position) {
       // Spawn food at the death location
       this.spawnFood(position.position.x, position.position.y);
