@@ -4,6 +4,7 @@ import { LifeComponent } from '../components/LifeComponent';
 import { PositionComponent } from '../components/PositionComponent';
 import { LIFE_CONFIG } from '../config/LifeConfig';
 import { World } from '../ecs/World';
+import { GameState } from '../config/constants';
 
 export class LifecycleSystem extends System {
   constructor(private world: World) {
@@ -45,11 +46,15 @@ export class LifecycleSystem extends System {
         }
       }
 
-      if (
-        life.age > LIFE_CONFIG.AGE_LIMIT ||
-        life.hunger > LIFE_CONFIG.HUNGER_LIMIT ||
-        life.radius < LIFE_CONFIG.MIN_RADIUS
-      ) {
+      if (life.age > LIFE_CONFIG.AGE_LIMIT) {
+        life.dead = true;
+        GameState.deathsByOldAge++;
+        document.getElementById('oldAgeDeaths')!.textContent = GameState.deathsByOldAge.toString();
+      } else if (life.hunger > LIFE_CONFIG.HUNGER_LIMIT) {
+        life.dead = true;
+        GameState.deathsByStarvation++;
+        document.getElementById('starvationDeaths')!.textContent = GameState.deathsByStarvation.toString();
+      } else if (life.radius < LIFE_CONFIG.MIN_RADIUS) {
         life.dead = true;
       }
 

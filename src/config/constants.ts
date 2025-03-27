@@ -23,4 +23,6 @@ export class GameState {
   static paused = false;
   static animationFrameId: number;
   static maxPopulation = 0;
+  static deathsByStarvation = 0;
+  static deathsByOldAge = 0;
 }

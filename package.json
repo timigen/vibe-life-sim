@@ -1,6 +1,6 @@
 {
   "name": "vibe-life-simulation",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "A simulation of a microbial world with different colored microbes that eat, mate, and evolve.",
   "type": "module",
   "scripts": {
