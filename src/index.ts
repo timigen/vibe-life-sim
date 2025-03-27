@@ -2,6 +2,14 @@ import { Group } from './types/Group';
 import { LifeConfig } from './types/LifeConfig';
 import { FoodConfig } from './types/FoodConfig';
 import { Vector2D } from './utils/Vector2D';
+import { LIFE_CONFIG } from './config/LifeConfig';
+import { FOOD_CONFIG } from './config/FoodConfig';
+import {
+  INITIAL_POPULATION_PER_GROUP,
+  INITIAL_FOOD_COUNT,
+  GROUPS,
+  GameState,
+} from './config/constants';
 
 class Life {
   public position: Vector2D;
@@ -67,8 +75,14 @@ class Life {
       this.position.y += (Math.random() - 0.5) * LIFE_CONFIG.SPEED * 2;
     }
 
-    this.position.x = Math.max(this.radius, Math.min(CANVAS_WIDTH - this.radius, this.position.x));
-    this.position.y = Math.max(this.radius, Math.min(CANVAS_HEIGHT - this.radius, this.position.y));
+    this.position.x = Math.max(
+      this.radius,
+      Math.min(GameState.CANVAS_WIDTH - this.radius, this.position.x)
+    );
+    this.position.y = Math.max(
+      this.radius,
+      Math.min(GameState.CANVAS_HEIGHT - this.radius, this.position.y)
+    );
 
     if (this.hunger > LIFE_CONFIG.HUNGER_LIMIT / 2) {
       this.radius -= LIFE_CONFIG.SIZE_DECREMENT;
@@ -170,51 +184,10 @@ class Food {
 }
 
 // Global variables
-let CANVAS_WIDTH = window.innerWidth;
-let CANVAS_HEIGHT = window.innerHeight;
-
 const canvas = document.getElementById('simCanvas') as HTMLCanvasElement;
 const ctx = canvas.getContext('2d')!;
-canvas.width = CANVAS_WIDTH;
-canvas.height = CANVAS_HEIGHT;
-
-let paused = false;
-let animationFrameId: number;
-let maxPopulation = 0;
-
-// FPS counter variables
-let lastTime = performance.now();
-let frameCount = 0;
-let fps = 0;
-
-const INITIAL_POPULATION_PER_GROUP = 20;
-const INITIAL_FOOD_COUNT = 70;
-const GROUPS: Group[] = [{ color: '#ff5555' }, { color: '#55aaff' }, { color: '#55ff55' }];
-
-const LIFE_CONFIG: LifeConfig = {
-  INITIAL_RADIUS: 5,
-  MAX_RADIUS: 15,
-  MIN_RADIUS: 2,
-  SPEED: 1.2,
-  MATING_DISTANCE: 15,
-  GESTATION_PERIOD: 300,
-  HUNGER_LIMIT: 1000,
-  HUNGER_THRESHOLD_FOR_MATING: 800,
-  FULLNESS_DURATION: 100,
-  SIZE_INCREMENT: 0.5,
-  SIZE_DECREMENT: 0.005,
-  AGE_LIMIT: 2000,
-  REST_CHANCE: 0.002,
-  REST_MIN_DURATION: 20,
-  REST_MAX_DURATION: 60,
-};
-
-const FOOD_CONFIG: FoodConfig = {
-  RADIUS: 3,
-  SPAWN_BASE_CHANCE: 0.03,
-  MAX_SPAWN_CHANCE: 0.1,
-  POPULATION_SPAWN_FACTOR: 0.0005,
-};
+canvas.width = GameState.CANVAS_WIDTH;
+canvas.height = GameState.CANVAS_HEIGHT;
 
 let lives: Life[] = [];
 let foods: Food[] = [];
@@ -226,16 +199,22 @@ function getRandom(min: number, max: number): number {
 function initializeSimulation(): void {
   for (const group of GROUPS) {
     for (let i = 0; i < INITIAL_POPULATION_PER_GROUP; i++) {
-      const x = getRandom(LIFE_CONFIG.INITIAL_RADIUS, CANVAS_WIDTH - LIFE_CONFIG.INITIAL_RADIUS);
-      const y = getRandom(LIFE_CONFIG.INITIAL_RADIUS, CANVAS_HEIGHT - LIFE_CONFIG.INITIAL_RADIUS);
+      const x = getRandom(
+        LIFE_CONFIG.INITIAL_RADIUS,
+        GameState.CANVAS_WIDTH - LIFE_CONFIG.INITIAL_RADIUS
+      );
+      const y = getRandom(
+        LIFE_CONFIG.INITIAL_RADIUS,
+        GameState.CANVAS_HEIGHT - LIFE_CONFIG.INITIAL_RADIUS
+      );
       lives.push(new Life(x, y, group, 'male'));
       lives.push(new Life(x, y, group, 'female'));
     }
   }
 
   for (let i = 0; i < INITIAL_FOOD_COUNT; i++) {
-    const x = getRandom(FOOD_CONFIG.RADIUS, CANVAS_WIDTH - FOOD_CONFIG.RADIUS);
-    const y = getRandom(FOOD_CONFIG.RADIUS, CANVAS_HEIGHT - FOOD_CONFIG.RADIUS);
+    const x = getRandom(FOOD_CONFIG.RADIUS, GameState.CANVAS_WIDTH - FOOD_CONFIG.RADIUS);
+    const y = getRandom(FOOD_CONFIG.RADIUS, GameState.CANVAS_HEIGHT - FOOD_CONFIG.RADIUS);
     foods.push(new Food(new Vector2D(x, y)));
   }
 }
@@ -327,26 +306,29 @@ function spawnFood(): void {
   );
 
   if (Math.random() < dynamicChance) {
-    const x = getRandom(FOOD_CONFIG.RADIUS, CANVAS_WIDTH - FOOD_CONFIG.RADIUS);
-    const y = getRandom(FOOD_CONFIG.RADIUS, CANVAS_HEIGHT - FOOD_CONFIG.RADIUS);
+    const x = getRandom(FOOD_CONFIG.RADIUS, GameState.CANVAS_WIDTH - FOOD_CONFIG.RADIUS);
+    const y = getRandom(FOOD_CONFIG.RADIUS, GameState.CANVAS_HEIGHT - FOOD_CONFIG.RADIUS);
     foods.push(new Food(new Vector2D(x, y)));
   }
 }
 
-function update(): void {
-  if (paused) return;
-
-  // Calculate FPS
+function updateFPS() {
   const currentTime = performance.now();
-  frameCount++;
+  GameState.frameCount++;
 
-  if (currentTime - lastTime >= 1000) {
-    fps = Math.round((frameCount * 1000) / (currentTime - lastTime));
-    frameCount = 0;
-    lastTime = currentTime;
+  if (currentTime - GameState.lastTime >= 1000) {
+    GameState.fps = GameState.frameCount;
+    GameState.frameCount = 0;
+    GameState.lastTime = currentTime;
   }
+}
 
-  ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+function update() {
+  if (GameState.paused) return;
+
+  updateFPS();
+
+  ctx.clearRect(0, 0, GameState.CANVAS_WIDTH, GameState.CANVAS_HEIGHT);
   spawnFood();
 
   for (const life of lives) {
@@ -362,31 +344,60 @@ function update(): void {
   for (const life of lives) life.draw(ctx);
 
   document.getElementById('populationCount')!.textContent = lives.length.toString();
-  document.getElementById('fpsCounter')!.textContent = fps.toString();
-  maxPopulation = Math.max(maxPopulation, lives.length);
+  document.getElementById('fpsCounter')!.textContent = GameState.fps.toString();
 
   if (lives.length === 0) {
-    document.getElementById('maxPopDisplay')!.textContent = maxPopulation.toString();
+    document.getElementById('maxPopDisplay')!.textContent = GameState.maxPopulation.toString();
     document.getElementById('gameOver')!.style.display = 'flex';
-    paused = true;
+    GameState.paused = true;
     return;
   }
 
-  animationFrameId = requestAnimationFrame(update);
+  if (lives.length > GameState.maxPopulation) {
+    GameState.maxPopulation = lives.length;
+  }
+
+  GameState.animationFrameId = requestAnimationFrame(update);
+}
+
+function render() {
+  // Draw lives
+  for (const life of lives) {
+    ctx.beginPath();
+    ctx.arc(life.position.x, life.position.y, life.radius, 0, Math.PI * 2);
+    ctx.fillStyle = life.group.color;
+    ctx.fill();
+    ctx.closePath();
+  }
+
+  // Draw foods
+  for (const food of foods) {
+    ctx.beginPath();
+    ctx.arc(food.position.x, food.position.y, FOOD_CONFIG.RADIUS, 0, Math.PI * 2);
+    ctx.fillStyle = '#ffffff';
+    ctx.fill();
+    ctx.closePath();
+  }
+}
+
+function animate() {
+  GameState.animationFrameId = requestAnimationFrame(animate);
+  update();
+  render();
 }
 
 window.addEventListener('resize', () => {
-  CANVAS_WIDTH = window.innerWidth;
-  CANVAS_HEIGHT = window.innerHeight;
-  canvas.width = CANVAS_WIDTH;
-  canvas.height = CANVAS_HEIGHT;
+  GameState.CANVAS_WIDTH = window.innerWidth;
+  GameState.CANVAS_HEIGHT = window.innerHeight;
+  canvas.width = GameState.CANVAS_WIDTH;
+  canvas.height = GameState.CANVAS_HEIGHT;
 });
 
 document.getElementById('toggleBtn')!.addEventListener('click', () => {
-  paused = !paused;
+  GameState.paused = !GameState.paused;
   const btn = document.getElementById('toggleBtn')!;
-  btn.textContent = paused ? '▶️' : '⏸';
-  if (!paused) update();
+  btn.textContent = GameState.paused ? '▶️' : '⏸';
+  if (!GameState.paused) update();
 });
 
 // Initialize and start simulation
