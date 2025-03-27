@@ -1,16 +1,31 @@
 import { SimState } from '../core/config/SimState';
 import { System } from '../core/ecs/System';
 import { World } from '../core/World';
+import { eventEmitter, EVENTS } from '../core/events/EventEmitter';
 
 export class UISystem extends System {
   private world: World;
   private lastFPSUpdate: number = performance.now();
   private frameCount: number = 0;
   private updatePending: boolean = false;
+  private currentPopulation: number = 0;
 
   constructor(world: World) {
     super();
     this.world = world;
+    
+    // Listen for population changes
+    eventEmitter.on(EVENTS.POPULATION_CHANGED, async (data: any) => {
+      this.currentPopulation = data.population;
+      this.updateStats();
+    });
+    
+    // Listen for sim pause events to show game over
+    eventEmitter.on(EVENTS.SIM_PAUSED, async () => {
+      if (this.currentPopulation === 0) {
+        this.showGameOver();
+      }
+    });
   }
 
   shouldProcessEntity(): boolean {
@@ -47,9 +62,12 @@ export class UISystem extends System {
     document.getElementById('starvationDeaths')!.textContent =
       SimState.deathsByStarvation.toString();
     document.getElementById('oldAgeDeaths')!.textContent = SimState.deathsByOldAge.toString();
-
-    // Update population count
-    this.updateStats();
+    
+    // Only perform initial display update if we don't have population yet
+    if (this.currentPopulation === 0) {
+      this.currentPopulation = this.world.getPopulation();
+      this.updateStats();
+    }
   }
 
   private async updateStats(): Promise<void> {
@@ -58,7 +76,7 @@ export class UISystem extends System {
 
     await new Promise(resolve => requestAnimationFrame(resolve));
 
-    document.getElementById('populationCount')!.textContent = this.world.getPopulation().toString();
+    document.getElementById('populationCount')!.textContent = this.currentPopulation.toString();
     // ... other UI updates ...
 
     this.updatePending = false;

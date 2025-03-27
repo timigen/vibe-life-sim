@@ -1,4 +1,5 @@
 import { Component } from './Component';
+import { eventEmitter, EVENTS } from '../events/EventEmitter';
 
 export class Entity {
   private static nextId = 0;
@@ -20,6 +21,13 @@ export class Entity {
     const hadComponent = this.components.has(componentName);
     this.components.set(componentName, component);
     
+    // Emit event for component being added
+    eventEmitter.emit(EVENTS.COMPONENT_ADDED, {
+      entity: this,
+      componentName,
+      component
+    });
+    
     // If component type changed (added or replaced), notify world to refresh filtering
     if (this.world && !hadComponent) {
       this.world.refreshSystemFiltering();
@@ -35,12 +43,24 @@ export class Entity {
   }
 
   removeComponent<T extends Component>(componentType: { new (...args: any[]): T }): void {
-    const hadComponent = this.components.has(componentType.name);
-    this.components.delete(componentType.name);
+    const componentName = componentType.name;
+    const hadComponent = this.components.has(componentName);
+    const component = this.components.get(componentName);
     
-    // If component was removed, notify world to refresh filtering
-    if (this.world && hadComponent) {
-      this.world.refreshSystemFiltering();
+    if (hadComponent && component) {
+      this.components.delete(componentName);
+      
+      // Emit event for component being removed
+      eventEmitter.emit(EVENTS.COMPONENT_REMOVED, {
+        entity: this,
+        componentName,
+        component
+      });
+      
+      // If component was removed, notify world to refresh filtering
+      if (this.world) {
+        this.world.refreshSystemFiltering();
+      }
     }
   }
 }

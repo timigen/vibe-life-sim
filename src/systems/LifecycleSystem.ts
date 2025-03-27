@@ -1,16 +1,15 @@
 import { LifeComponent } from '../components/LifeComponent';
 import { PositionComponent } from '../components/PositionComponent';
-import { UISystem } from './UISystem';
 import { System } from '../core/ecs/System';
 import { World } from '../core/World';
 import { Entity } from '../core/ecs/Entity';
 import { SimState } from '../core/config/SimState';
 import { LIFE_CONFIG } from '../core/config/LifeConfig';
+import { eventEmitter, EVENTS } from '../core/events/EventEmitter';
 
 export class LifecycleSystem extends System {
   constructor(
-    private world: World,
-    private uiSystem: UISystem
+    private world: World
   ) {
     super();
   }
@@ -79,23 +78,13 @@ export class LifecycleSystem extends System {
         SimState.deathsByStarvation++;
       }
 
-      if (life.dead) {
-        // Convert to food
-        const comp = entity.getComponent(PositionComponent)!;
-        this.world.spawnFood(comp.pos.x, comp.pos.y);
-        this.world.removeLife(entity);
-      }
+      // Life is already handled by the world.update() loop
     }
 
     // Update max population
     const currentPopulation = this.world.getPopulation();
     if (currentPopulation > SimState.maxPopulation) {
       SimState.maxPopulation = currentPopulation;
-    }
-
-    // Check for simulation over
-    if (currentPopulation === 0) {
-      this.uiSystem.showGameOver();
     }
   }
 }

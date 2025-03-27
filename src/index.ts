@@ -14,6 +14,8 @@ import { World } from './core/World';
 import { SimState } from './core/config/SimState';
 import { LIFE_CONFIG } from './core/config/LifeConfig';
 import { FoodSystem } from './systems/FoodSystem';
+import { eventEmitter, EVENTS } from './core/events/EventEmitter';
+import { StatisticsSystem } from './systems/StatisticsSystem';
 
 // Global variables
 const TARGET_FRAME_TIME = 1000 / 60; // Target 60 FPS
@@ -28,10 +30,11 @@ const foodSystem = new FoodSystem(world);
 world.addSystem(new RenderingSystem(ctx));
 world.addSystem(new MovementSystem());
 world.addSystem(new CollisionSystem());
-world.addSystem(new LifecycleSystem(world, uiSystem));
+world.addSystem(new LifecycleSystem(world));
 world.addSystem(new MatingSystem(world));
 world.addSystem(foodSystem);
 world.addSystem(uiSystem);
+world.addSystem(new StatisticsSystem());
 
 // Could be updated to load resources asynchronously
 async function initializeSimulation(): Promise<void> {
@@ -58,12 +61,25 @@ function update(deltaTime: number) {
   world.update(deltaTime);
 
   if (world.getPopulation() === 0) {
-    SimState.paused = true;
+    setPaused(true);
     return;
   }
 
   if (world.getPopulation() > SimState.maxPopulation) {
     SimState.maxPopulation = world.getPopulation();
+  }
+}
+
+function setPaused(paused: boolean): void {
+  SimState.paused = paused;
+  const btn = document.getElementById('toggleBtn')!;
+  btn.textContent = SimState.paused ? '▶️' : '⏸';
+  
+  if (paused) {
+    eventEmitter.emit(EVENTS.SIM_PAUSED, {});
+  } else {
+    eventEmitter.emit(EVENTS.SIM_RESUMED, {});
+    animate();
   }
 }
 
@@ -93,10 +109,14 @@ window.addEventListener('resize', () => {
 
 window.addEventListener('keydown', event => {
   if (event.code === 'Space') {
-    SimState.paused = !SimState.paused;
-    const btn = document.getElementById('toggleBtn')!;
-    btn.textContent = SimState.paused ? '▶️' : '⏸';
-    if (!SimState.paused) animate();
+    setPaused(!SimState.paused);
+  }
+});
+
+// Listen for population changes to end simulation when population is 0
+eventEmitter.on(EVENTS.POPULATION_CHANGED, async (data: any) => {
+  if (data.population === 0) {
+    setPaused(true);
   }
 });
 
