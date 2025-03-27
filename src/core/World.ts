@@ -8,6 +8,7 @@ import { FOOD_CONFIG } from './config/FoodConfig';
 import { Vector2D } from './Vector2D';
 import { eventEmitter, EVENTS } from './events/EventEmitter';
 import { LifePool } from './LifePool';
+import { SimState } from './config/SimState';
 
 export class World {
   private entities: Entity[] = [];
@@ -106,15 +107,21 @@ export class World {
   }
 
   update(deltaTime: number): void {
-    // Update all systems
+    // Check if we're only rendering (deltaTime=0) or if the simulation is running
+    const isSimulationActive = deltaTime > 0 && !SimState.paused;
+
+    // Update all systems - they will handle paused state internally if needed
     this.systems.forEach(system => system.update(deltaTime));
 
-    // Remove dead entities
-    for (let i = this.entities.length - 1; i >= 0; i--) {
-      const entity = this.entities[i];
-      const life = entity.getComponent(LifeComponent);
-      if (life?.dead) {
-        this.removeLife(entity);
+    // Only process deaths if simulation is active
+    if (isSimulationActive) {
+      // Remove dead entities
+      for (let i = this.entities.length - 1; i >= 0; i--) {
+        const entity = this.entities[i];
+        const life = entity.getComponent(LifeComponent);
+        if (life?.dead) {
+          this.removeLife(entity);
+        }
       }
     }
   }

@@ -123,6 +123,14 @@
         #toggleBtn:hover {
             background: rgba(255, 255, 255, 0.3);
         }
+        .paused-indicator {
+            font-weight: bold;
+        }
+        #pauseStatus {
+            color: #ff4444;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
         .group-stat {
             display: flex;
             flex-direction: column;
@@ -196,7 +204,10 @@
         <div class="stat">
             Deaths by Old Age: <span id="oldAgeDeaths">0</span>
         </div>
-        <button id="toggleBtn">⏸</button>
+        <div class="stat paused-indicator">
+            Status: <span id="pauseStatus">PAUSED</span>
+        </div>
+        <button id="toggleBtn">▶️</button>
     </div>
     <canvas id="simCanvas"></canvas>
     <div id="simulationOver">

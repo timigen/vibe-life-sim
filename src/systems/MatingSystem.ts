@@ -4,6 +4,7 @@ import { LIFE_CONFIG } from '../core/config/LifeConfig';
 import { Entity } from '../core/ecs/Entity';
 import { System } from '../core/ecs/System';
 import { World } from '../core/World';
+import { SimState } from '../core/config/SimState';
 
 export class MatingSystem extends System {
   constructor(private world: World) {
@@ -14,7 +15,12 @@ export class MatingSystem extends System {
     return entity.hasComponent(LifeComponent) && entity.hasComponent(PositionComponent);
   }
 
-  update(): void {
+  update(deltaTime: number): void {
+    // Skip mating if paused or deltaTime is 0
+    if (deltaTime <= 0 || SimState.paused) {
+      return;
+    }
+
     for (let i = 0; i < this.filteredEntities.length; i++) {
       for (let j = i + 1; j < this.filteredEntities.length; j++) {
         const aEntity = this.filteredEntities[i];

@@ -17,6 +17,11 @@ export class LifecycleSystem extends System {
   }
 
   update(deltaTime: number): void {
+    // Skip lifecycle updates if deltaTime is 0 or if simulation is paused
+    if (deltaTime <= 0 || SimState.paused) {
+      return;
+    }
+
     // Use filteredEntities instead of entities - no need to filter again
     for (const entity of this.filteredEntities) {
       const life = entity.getComponent(LifeComponent);

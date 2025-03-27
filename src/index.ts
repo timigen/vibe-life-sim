@@ -59,8 +59,11 @@ async function initializeSimulation(): Promise<void> {
 function update(deltaTime: number) {
   if (SimState.paused) return;
 
+  // Limit deltaTime to prevent huge jumps after being paused
+  const limitedDeltaTime = Math.min(deltaTime, 33); // Cap at about 30 FPS worth of time
+
   ctx.clearRect(0, 0, SimState.CANVAS_WIDTH, SimState.CANVAS_HEIGHT);
-  world.update(deltaTime);
+  world.update(limitedDeltaTime);
 
   if (world.getPopulation() === 0) {
     setPaused(true);
@@ -75,11 +78,17 @@ function update(deltaTime: number) {
 function setPaused(paused: boolean): void {
   SimState.paused = paused;
   const btn = document.getElementById('toggleBtn')!;
+  const statusElement = document.getElementById('pauseStatus')!;
+
   btn.textContent = SimState.paused ? '▶️' : '⏸';
+  statusElement.textContent = SimState.paused ? 'PAUSED' : 'RUNNING';
+  statusElement.style.color = SimState.paused ? '#ff4444' : '#4CAF50';
 
   if (paused) {
     eventEmitter.emit(EVENTS.SIM_PAUSED, {});
   } else {
+    // Reset the last time when resuming to prevent huge deltaTime
+    SimState.lastTime = performance.now();
     eventEmitter.emit(EVENTS.SIM_RESUMED, {});
     animate();
   }
@@ -124,7 +133,25 @@ eventEmitter.on(EVENTS.POPULATION_CHANGED, async (data: any) => {
 
 // Initialize and start the simulation
 initializeSimulation();
-animate();
+
+// Initial render to show the starting state - use deltaTime=0 to avoid affecting hunger/age
+ctx.clearRect(0, 0, SimState.CANVAS_WIDTH, SimState.CANVAS_HEIGHT);
+
+// Temporarily set paused to false just for rendering, then restore it
+const wasPaused = SimState.paused;
+SimState.paused = false;
+world.update(0); // Use 0 for deltaTime to avoid affecting hunger/age
+SimState.paused = wasPaused;
+
+// Notify population change for UI
+eventEmitter.emit(EVENTS.POPULATION_CHANGED, {
+  population: world.getPopulation(),
+});
+
+// Only start animation if not paused
+if (!SimState.paused) {
+  animate();
+}
 
 // Initialize the toggle button state
 document.getElementById('toggleBtn')!.textContent = SimState.paused ? '▶️' : '⏸';

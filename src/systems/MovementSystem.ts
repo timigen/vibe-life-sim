@@ -6,6 +6,7 @@ import { System } from '../core/ecs/System';
 import { Entity } from '../core/ecs/Entity';
 import { LIFE_CONFIG } from '../core/config/LifeConfig';
 import { FoodComponent } from '../components/FoodComponent';
+import { SimState } from '../core/config/SimState';
 
 export class MovementSystem extends System {
   private foodEntities: Entity[] = [];
@@ -21,6 +22,11 @@ export class MovementSystem extends System {
   }
 
   update(deltaTime: number): void {
+    // Skip movement updates if paused or deltaTime is 0
+    if (deltaTime <= 0 || SimState.paused) {
+      return;
+    }
+
     // Clear food entities cache and rebuild it
     this.foodEntities = [];
     for (const entity of this.entities) {

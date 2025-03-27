@@ -10,7 +10,7 @@ export class SimState {
   static avgFps = 0;
   static fpsSamples = 0;
   static totalFps = 0;
-  static paused = false;
+  static paused = true;
   static animationFrameId: number;
   static maxPopulation = 0;
   static deathsByStarvation = 0;
