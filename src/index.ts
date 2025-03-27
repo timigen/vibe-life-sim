@@ -131,11 +131,13 @@ window.addEventListener('resize', () => {
   canvas.height = SimulationState.CANVAS_HEIGHT;
 });
 
-document.getElementById('toggleBtn')!.addEventListener('click', () => {
-  SimulationState.paused = !SimulationState.paused;
-  const btn = document.getElementById('toggleBtn')!;
-  btn.textContent = SimulationState.paused ? '▶️' : '⏸';
-  if (!SimulationState.paused) animate();
+window.addEventListener('keydown', event => {
+  if (event.code === 'Space') {
+    SimulationState.paused = !SimulationState.paused;
+    const btn = document.getElementById('toggleBtn')!;
+    btn.textContent = SimulationState.paused ? '▶️' : '⏸';
+    if (!SimulationState.paused) animate();
+  }
 });
 
 // Initialize and start the simulation
