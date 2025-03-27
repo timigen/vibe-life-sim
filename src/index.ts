@@ -1,5 +1,4 @@
 import { FOOD_CONFIG } from './core/config/FoodConfig';
-import { INITIAL_POPULATION_PER_GROUP, INITIAL_FOOD_COUNT, GROUPS } from './core/constants';
 import { FoodComponent } from './components/FoodComponent';
 import { PositionComponent } from './components/PositionComponent';
 import { LifeComponent } from './components/LifeComponent';
@@ -16,6 +15,7 @@ import { LIFE_CONFIG } from './core/config/LifeConfig';
 import { FoodSystem } from './systems/FoodSystem';
 import { eventEmitter, EVENTS } from './core/events/EventEmitter';
 import { StatisticsSystem } from './systems/StatisticsSystem';
+import { INITIAL_POPULATION_PER_GROUP, GROUPS, INITIAL_FOOD_COUNT } from './constants';
 
 // Global variables
 const canvas = document.getElementById('simCanvas') as HTMLCanvasElement;

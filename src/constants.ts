@@ -1,11 +1,11 @@
-import { Group } from './types/Group';
+import { Group } from './core/types/Group';
 
 export let CANVAS_WIDTH = window.innerWidth;
 export let CANVAS_HEIGHT = window.innerHeight;
 
 // Game initialization constants
 export const INITIAL_POPULATION_PER_GROUP = 6;
-export const INITIAL_FOOD_COUNT = 30;
+export const INITIAL_FOOD_COUNT = 100;
 export const NUMBER_OF_GROUPS = 2;
 
 // Array of groups with their respective colors

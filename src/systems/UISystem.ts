@@ -99,15 +99,24 @@ export class UISystem extends System {
           const statElement = document.createElement('div');
           statElement.className = 'group-stat';
           statElement.innerHTML = `
-          <div style="color: ${stat.color};">Group Name: ${stat.name}</div>
-          <div>Max Pop: ${stat.maxPopulation}</div>
-          <div>Max Generation: ${stat.highestGeneration}</div>
+          <div style="color: ${stat.color};">Group: ${stat.name}</div>
+          <div>Max Population: ${stat.maxPopulation}</div>
+          <div>Generation: ${Math.round(stat.highestGeneration)}</div>
         `;
           groupStatsContainer.appendChild(statElement);
         }
       );
     }
 
-    document.getElementById('simulationOver')!.style.display = 'flex';
+    // Ensure the modal is centered and scrollable on small screens
+    const modal = document.getElementById('simulationOver')!;
+    modal.style.display = 'flex';
+    modal.style.alignItems = window.innerHeight < 600 ? 'flex-start' : 'center';
+
+    // Add resize listener to adjust alignment on window resize
+    const handleResize = () => {
+      modal.style.alignItems = window.innerHeight < 600 ? 'flex-start' : 'center';
+    };
+    window.addEventListener('resize', handleResize);
   }
 }

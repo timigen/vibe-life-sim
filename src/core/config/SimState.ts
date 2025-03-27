@@ -1,4 +1,4 @@
-import { GROUPS } from '../constants';
+import { GROUPS } from '../../constants';
 
 // This class holds the state of the game that can change over time
 export class SimState {
