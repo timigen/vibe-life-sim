@@ -13,6 +13,7 @@ import { UISystem } from './systems/UISystem';
 import { World } from './core/World';
 import { SimState } from './core/config/SimState';
 import { LIFE_CONFIG } from './core/config/LifeConfig';
+import { FoodSystem } from './systems/FoodSystem';
 
 // Global variables
 const TARGET_FRAME_TIME = 1000 / 60; // Target 60 FPS
@@ -23,11 +24,13 @@ canvas.height = SimState.CANVAS_HEIGHT;
 
 const world = new World(INITIAL_POPULATION_PER_GROUP * GROUPS.length * 2 * 2); // Double initial size for growth
 const uiSystem = new UISystem(world);
+const foodSystem = new FoodSystem(world);
 world.addSystem(new RenderingSystem(ctx));
 world.addSystem(new MovementSystem());
 world.addSystem(new CollisionSystem());
 world.addSystem(new LifecycleSystem(world, uiSystem));
 world.addSystem(new MatingSystem(world));
+world.addSystem(foodSystem);
 world.addSystem(uiSystem);
 
 // Could be updated to load resources asynchronously
@@ -48,48 +51,11 @@ async function initializeSimulation(): Promise<void> {
   }
 }
 
-function spawnFood(): void {
-  if (Math.random() < FOOD_CONFIG.SPAWN_BASE_CHANCE) {
-    const position = SimUtils.getRandomPosition(FOOD_CONFIG.RADIUS);
-    world.spawnFood(position.x, position.y);
-  }
-}
-
-function processEating(): void {
-  const entities = world.getEntities();
-  for (let i = entities.length - 1; i >= 0; i--) {
-    const entity = entities[i];
-    if (!entity.hasComponent(FoodComponent)) continue;
-
-    const foodPos = entity.getComponent(PositionComponent)!;
-    const foodComponent = entity.getComponent(FoodComponent)!;
-
-    for (const lifeEntity of entities) {
-      if (!lifeEntity.hasComponent(LifeComponent)) continue;
-
-      const life = lifeEntity.getComponent(LifeComponent)!;
-      const lifePos = lifeEntity.getComponent(PositionComponent)!;
-
-      if (lifePos.pos.distanceTo(foodPos.pos) < life.radius + foodComponent.radius) {
-        life.hunger = -LIFE_CONFIG.FULLNESS_DURATION;
-        life.radius = Math.min(life.radius + LIFE_CONFIG.SIZE_INCREMENT, LIFE_CONFIG.MAX_RADIUS);
-
-        world.removeEntity(entity);
-        break;
-      }
-    }
-  }
-}
-
 function update(deltaTime: number) {
   if (SimState.paused) return;
 
   ctx.clearRect(0, 0, SimState.CANVAS_WIDTH, SimState.CANVAS_HEIGHT);
-  spawnFood();
-
   world.update(deltaTime);
-
-  processEating();
 
   if (world.getPopulation() === 0) {
     SimState.paused = true;
@@ -102,17 +68,18 @@ function update(deltaTime: number) {
 }
 
 async function animate(): Promise<void> {
-  while (!SimState.paused) {
-    const now = performance.now();
-    const deltaTime = now - SimState.lastTime;
+  const now = performance.now();
+  const deltaTime = now - SimState.lastTime;
 
-    // Use setTimeout to maintain consistent frame rate
-    if (deltaTime < TARGET_FRAME_TIME) {
-      await new Promise(resolve => setTimeout(resolve, TARGET_FRAME_TIME - deltaTime));
-    }
+  // Use setTimeout to maintain consistent frame rate
+  if (deltaTime < TARGET_FRAME_TIME) {
+    await new Promise(resolve => setTimeout(resolve, TARGET_FRAME_TIME - deltaTime));
+  }
 
-    await update(deltaTime);
-    SimState.lastTime = performance.now();
+  await update(deltaTime);
+  SimState.lastTime = performance.now();
+  
+  if (!SimState.paused) {
     requestAnimationFrame(animate);
   }
 }

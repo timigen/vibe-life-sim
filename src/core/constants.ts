@@ -15,8 +15,3 @@ export const GROUPS: Group[] = [
   { color: '#B5EAD7', name: 'GREEN' }, // Green
   { color: '#AEC6CF', name: 'BLUE' }, // Blue
 ].slice(0, NUMBER_OF_GROUPS);
-
-export function updateCanvasSize(width: number, height: number): void {
-  CANVAS_WIDTH = width;
-  CANVAS_HEIGHT = height;
-}
