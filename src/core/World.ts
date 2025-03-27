@@ -19,6 +19,7 @@ export class World {
 
   spawnFood(x: number, y: number): void {
     const foodEntity = new Entity();
+    foodEntity.setWorld(this);
     foodEntity.addComponent(new PositionComponent(new Vector2D(x, y)));
     foodEntity.addComponent(new FoodComponent(FOOD_CONFIG.RADIUS));
     this.addEntity(foodEntity);
@@ -26,6 +27,7 @@ export class World {
 
   spawnLife(x: number, y: number, group: Group, sex: 'male' | 'female'): Entity {
     const entity = this.lifePool.spawn(x, y, group, sex);
+    entity.setWorld(this);
     this.addEntity(entity);
     return entity;
   }
@@ -42,6 +44,7 @@ export class World {
 
   addEntity(entity: Entity): void {
     this.entities.push(entity);
+    entity.setWorld(this);
     this.systems.forEach(system => system.addEntity(entity));
   }
 
@@ -55,6 +58,7 @@ export class World {
 
   addSystem(system: System): void {
     this.systems.push(system);
+    // Refresh entity filtering for this system with existing entities
     this.entities.forEach(entity => system.addEntity(entity));
   }
 
@@ -82,5 +86,10 @@ export class World {
 
   getPopulation(): number {
     return this.lifePool.getActiveCount();
+  }
+
+  // Refresh filtering for all systems - useful when entities change components
+  refreshSystemFiltering(): void {
+    this.systems.forEach(system => system.refreshEntityFiltering());
   }
 }

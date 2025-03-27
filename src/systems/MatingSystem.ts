@@ -15,10 +15,10 @@ export class MatingSystem extends System {
   }
 
   update(): void {
-    for (let i = 0; i < this.entities.length; i++) {
-      for (let j = i + 1; j < this.entities.length; j++) {
-        const aEntity = this.entities[i];
-        const bEntity = this.entities[j];
+    for (let i = 0; i < this.filteredEntities.length; i++) {
+      for (let j = i + 1; j < this.filteredEntities.length; j++) {
+        const aEntity = this.filteredEntities[i];
+        const bEntity = this.filteredEntities[j];
 
         const aLife = aEntity.getComponent(LifeComponent);
         const bLife = bEntity.getComponent(LifeComponent);

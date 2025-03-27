@@ -19,7 +19,7 @@ export class CollisionSystem extends System {
 
   async update(deltaTime: number): Promise<void> {
     const BATCH_SIZE = 100;
-    const entities = [...this.entities];
+    const entities = [...this.filteredEntities];
 
     for (let i = 0; i < entities.length; i += BATCH_SIZE) {
       const batch = entities.slice(i, i + BATCH_SIZE);

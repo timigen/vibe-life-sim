@@ -12,7 +12,8 @@ export class MovementSystem extends System {
   }
 
   update(deltaTime: number): void {
-    for (const entity of this.entities) {
+    // Use filteredEntities instead of entities - no need to check components again
+    for (const entity of this.filteredEntities) {
       const life = entity.getComponent(LifeComponent);
       const position = entity.getComponent(PositionComponent);
       if (!life || !position) continue;

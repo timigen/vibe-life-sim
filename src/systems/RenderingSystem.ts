@@ -17,8 +17,8 @@ export class RenderingSystem extends System {
   }
 
   update(): void {
-    // Render all entities
-    for (const entity of this.entities) {
+    // Render all entities - use filteredEntities for better performance
+    for (const entity of this.filteredEntities) {
       const position = entity.getComponent(PositionComponent);
       if (!position) continue;
 

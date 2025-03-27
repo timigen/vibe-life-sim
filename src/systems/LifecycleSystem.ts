@@ -20,7 +20,8 @@ export class LifecycleSystem extends System {
   }
 
   update(deltaTime: number): void {
-    for (const entity of this.entities) {
+    // Use filteredEntities instead of entities - no need to filter again
+    for (const entity of this.filteredEntities) {
       const life = entity.getComponent(LifeComponent);
       if (!life) continue;
 
@@ -34,7 +35,7 @@ export class LifecycleSystem extends System {
           stat.color === life.group.color
       );
       if (groupStat) {
-        const currentGroupPopulation = this.entities.filter(
+        const currentGroupPopulation = this.filteredEntities.filter(
           e => e.getComponent(LifeComponent)?.group.color === life.group.color
         ).length;
         if (currentGroupPopulation > groupStat.maxPopulation) {
