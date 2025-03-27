@@ -6,7 +6,7 @@ import {
   INITIAL_POPULATION_PER_GROUP,
   INITIAL_FOOD_COUNT,
   GROUPS,
-  GameState,
+  SimulationState,
 } from './config/constants';
 import { World } from './ecs/World';
 import { Entity } from './ecs/Entity';
@@ -25,8 +25,8 @@ import { UISystem } from './systems/UISystem';
 const TARGET_FRAME_TIME = 1000 / 60; // Target 60 FPS
 const canvas = document.getElementById('simCanvas') as HTMLCanvasElement;
 const ctx = canvas.getContext('2d')!;
-canvas.width = GameState.CANVAS_WIDTH;
-canvas.height = GameState.CANVAS_HEIGHT;
+canvas.width = SimulationState.CANVAS_WIDTH;
+canvas.height = SimulationState.CANVAS_HEIGHT;
 
 const world = new World(INITIAL_POPULATION_PER_GROUP * GROUPS.length * 2 * 2); // Double initial size for growth
 const uiSystem = new UISystem(world);
@@ -89,9 +89,9 @@ function processEating(): void {
 }
 
 function update(deltaTime: number) {
-  if (GameState.paused) return;
+  if (SimulationState.paused) return;
 
-  ctx.clearRect(0, 0, GameState.CANVAS_WIDTH, GameState.CANVAS_HEIGHT);
+  ctx.clearRect(0, 0, SimulationState.CANVAS_WIDTH, SimulationState.CANVAS_HEIGHT);
   spawnFood();
 
   world.update(deltaTime);
@@ -99,19 +99,19 @@ function update(deltaTime: number) {
   processEating();
 
   if (world.getLifeCount() === 0) {
-    GameState.paused = true;
+    SimulationState.paused = true;
     return;
   }
 
-  if (world.getLifeCount() > GameState.maxPopulation) {
-    GameState.maxPopulation = world.getLifeCount();
+  if (world.getLifeCount() > SimulationState.maxPopulation) {
+    SimulationState.maxPopulation = world.getLifeCount();
   }
 }
 
 async function animate(): Promise<void> {
-  while (!GameState.paused) {
+  while (!SimulationState.paused) {
     const now = performance.now();
-    const deltaTime = now - GameState.lastTime;
+    const deltaTime = now - SimulationState.lastTime;
 
     // Use setTimeout to maintain consistent frame rate
     if (deltaTime < TARGET_FRAME_TIME) {
@@ -119,23 +119,23 @@ async function animate(): Promise<void> {
     }
 
     await update(deltaTime);
-    GameState.lastTime = performance.now();
+    SimulationState.lastTime = performance.now();
     requestAnimationFrame(animate);
   }
 }
 
 window.addEventListener('resize', () => {
-  GameState.CANVAS_WIDTH = window.innerWidth;
-  GameState.CANVAS_HEIGHT = window.innerHeight;
-  canvas.width = GameState.CANVAS_WIDTH;
-  canvas.height = GameState.CANVAS_HEIGHT;
+  SimulationState.CANVAS_WIDTH = window.innerWidth;
+  SimulationState.CANVAS_HEIGHT = window.innerHeight;
+  canvas.width = SimulationState.CANVAS_WIDTH;
+  canvas.height = SimulationState.CANVAS_HEIGHT;
 });
 
 document.getElementById('toggleBtn')!.addEventListener('click', () => {
-  GameState.paused = !GameState.paused;
+  SimulationState.paused = !SimulationState.paused;
   const btn = document.getElementById('toggleBtn')!;
-  btn.textContent = GameState.paused ? '▶️' : '⏸';
-  if (!GameState.paused) animate();
+  btn.textContent = SimulationState.paused ? '▶️' : '⏸';
+  if (!SimulationState.paused) animate();
 });
 
 // Initialize and start the simulation

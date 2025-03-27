@@ -20,7 +20,7 @@ export const GROUPS: Group[] = [
 
 // Game state class for mutable variables
 // This class holds the state of the game that can change over time
-export class GameState {
+export class SimulationState {
   static CANVAS_WIDTH = window.innerWidth;
   static CANVAS_HEIGHT = window.innerHeight;
   static lastTime = performance.now();
