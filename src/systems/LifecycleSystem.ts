@@ -8,7 +8,10 @@ import { GameState } from '../config/constants';
 import { UISystem } from './UISystem';
 
 export class LifecycleSystem extends System {
-  constructor(private world: World, private uiSystem: UISystem) {
+  constructor(
+    private world: World,
+    private uiSystem: UISystem
+  ) {
     super();
   }
 

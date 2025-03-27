@@ -22,11 +22,11 @@ export class CollisionSystem extends System {
     const entities = [...this.entities];
 
     for (let i = 0; i < entities.length; i += BATCH_SIZE) {
-        const batch = entities.slice(i, i + BATCH_SIZE);
-        await this.processBatch(batch);
-        
-        // Allow other tasks to run between batches
-        await new Promise(resolve => setTimeout(resolve, 0));
+      const batch = entities.slice(i, i + BATCH_SIZE);
+      await this.processBatch(batch);
+
+      // Allow other tasks to run between batches
+      await new Promise(resolve => setTimeout(resolve, 0));
     }
   }
 
@@ -73,11 +73,11 @@ export class CollisionSystem extends System {
           // Adjust velocities for bouncing effect
           const relativeVelocity = posA.velocity.clone().subtract(posB.velocity);
           const normalVelocity = relativeVelocity.dot(direction);
-          
+
           if (normalVelocity > 0) {
             const restitution = 0.5; // Bounce factor
             const impulse = normalVelocity * restitution;
-            
+
             const impulseVector = direction.clone().multiply(impulse);
             posA.velocity = posA.velocity.clone().subtract(impulseVector);
             posB.velocity = posB.velocity.clone().add(impulseVector);
@@ -86,4 +86,4 @@ export class CollisionSystem extends System {
       }
     }
   }
-} 
+}

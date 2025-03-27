@@ -1,12 +1,19 @@
 // Game initialization constants
+// Initial population per group
 export const INITIAL_POPULATION_PER_GROUP = 50;
+
+// Initial food count in the simulation
 export const INITIAL_FOOD_COUNT = 140;
+
+// Number of groups in the simulation
 export const NUMBER_OF_GROUPS = 3;
 
+// Interface for defining a group
 export interface Group {
   color: string;
 }
 
+// Array of groups with their respective colors
 export const GROUPS: Group[] = [
   { color: '#ff0000' }, // Red
   { color: '#00ff00' }, // Green
@@ -14,6 +21,7 @@ export const GROUPS: Group[] = [
 ].slice(0, NUMBER_OF_GROUPS);
 
 // Game state class for mutable variables
+// This class holds the state of the game that can change over time
 export class GameState {
   static CANVAS_WIDTH = window.innerWidth;
   static CANVAS_HEIGHT = window.innerHeight;

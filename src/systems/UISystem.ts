@@ -21,11 +21,11 @@ export class UISystem extends System {
     // Update FPS counter
     this.frameCount++;
     const now = performance.now();
-    
+
     // Calculate FPS immediately for the first frame
     const currentFps = Math.round((this.frameCount * 1000) / (now - this.lastFPSUpdate));
     document.getElementById('fpsCounter')!.textContent = currentFps.toString();
-    
+
     if (now - this.lastFPSUpdate >= 1000) {
       GameState.fps = currentFps;
       // Update average FPS
@@ -40,11 +40,12 @@ export class UISystem extends System {
     document.getElementById('fpsCounter')!.textContent = GameState.fps.toString();
 
     // Update canvas dimensions
-    document.getElementById('canvasDimensions')!.textContent = 
-        `${GameState.CANVAS_WIDTH}x${GameState.CANVAS_HEIGHT}`;
+    document.getElementById('canvasDimensions')!.textContent =
+      `${GameState.CANVAS_WIDTH}x${GameState.CANVAS_HEIGHT}`;
 
     // Update death counters
-    document.getElementById('starvationDeaths')!.textContent = GameState.deathsByStarvation.toString();
+    document.getElementById('starvationDeaths')!.textContent =
+      GameState.deathsByStarvation.toString();
     document.getElementById('oldAgeDeaths')!.textContent = GameState.deathsByOldAge.toString();
 
     // Update population count
@@ -56,9 +57,8 @@ export class UISystem extends System {
     this.updatePending = true;
 
     await new Promise(resolve => requestAnimationFrame(resolve));
-    
-    document.getElementById('populationCount')!.textContent = 
-        this.world.getLifeCount().toString();
+
+    document.getElementById('populationCount')!.textContent = this.world.getLifeCount().toString();
     // ... other UI updates ...
 
     this.updatePending = false;
@@ -66,9 +66,10 @@ export class UISystem extends System {
 
   showGameOver(): void {
     document.getElementById('maxPopDisplay')!.textContent = GameState.maxPopulation.toString();
-    document.getElementById('finalStarvationDeaths')!.textContent = GameState.deathsByStarvation.toString();
+    document.getElementById('finalStarvationDeaths')!.textContent =
+      GameState.deathsByStarvation.toString();
     document.getElementById('finalOldAgeDeaths')!.textContent = GameState.deathsByOldAge.toString();
     document.getElementById('finalFPS')!.textContent = GameState.avgFps.toString();
     document.getElementById('simulationOver')!.style.display = 'flex';
   }
-} 
+}

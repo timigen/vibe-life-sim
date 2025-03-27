@@ -109,21 +109,19 @@ function update(deltaTime: number) {
 }
 
 async function animate(): Promise<void> {
-    while (!GameState.paused) {
-        const now = performance.now();
-        const deltaTime = now - GameState.lastTime;
-        
-        // Use setTimeout to maintain consistent frame rate
-        if (deltaTime < TARGET_FRAME_TIME) {
-            await new Promise(resolve => 
-                setTimeout(resolve, TARGET_FRAME_TIME - deltaTime)
-            );
-        }
+  while (!GameState.paused) {
+    const now = performance.now();
+    const deltaTime = now - GameState.lastTime;
 
-        await update(deltaTime);
-        GameState.lastTime = performance.now();
-        requestAnimationFrame(animate);
+    // Use setTimeout to maintain consistent frame rate
+    if (deltaTime < TARGET_FRAME_TIME) {
+      await new Promise(resolve => setTimeout(resolve, TARGET_FRAME_TIME - deltaTime));
     }
+
+    await update(deltaTime);
+    GameState.lastTime = performance.now();
+    requestAnimationFrame(animate);
+  }
 }
 
 window.addEventListener('resize', () => {
