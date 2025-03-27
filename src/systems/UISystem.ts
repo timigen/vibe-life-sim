@@ -79,9 +79,9 @@ export class UISystem extends System {
         const statElement = document.createElement('div');
         statElement.className = 'group-stat';
         statElement.innerHTML = `
-          <div style="color: ${stat.color};">Group Name: ${stat.name}, Color: ${stat.color}</div>
+          <div style="color: ${stat.color};">Group Name: ${stat.name}</div>
           <div>Max Population: ${stat.maxPopulation}</div>
-          <div>Highest Generation: ${stat.highestGeneration}</div>
+          <div>Max Generation: ${stat.highestGeneration}</div>
         `;
         groupStatsContainer.appendChild(statElement);
       });

@@ -1,18 +1,15 @@
 // Game initialization constants
+
+import { Group } from "../types/Group";
+
 // Initial population per group
-export const INITIAL_POPULATION_PER_GROUP = 20;
+export const INITIAL_POPULATION_PER_GROUP = 10;
 
 // Initial food count in the simulation
-export const INITIAL_FOOD_COUNT = 150;
+export const INITIAL_FOOD_COUNT = 60;
 
 // Number of groups in the simulation
 export const NUMBER_OF_GROUPS = 2;
-
-// Interface for defining a group
-export interface Group {
-  color: string;
-  name: string;
-}
 
 // Array of groups with their respective colors
 export const GROUPS: Group[] = [
