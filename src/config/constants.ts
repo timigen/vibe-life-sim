@@ -1,6 +1,6 @@
 // Game initialization constants
 
-import { Group } from "../types/Group";
+import { Group } from '../types/Group';
 
 // Initial population per group
 export const INITIAL_POPULATION_PER_GROUP = 10;
