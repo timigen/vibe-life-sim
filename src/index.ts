@@ -15,7 +15,12 @@ import { LIFE_CONFIG } from './core/config/LifeConfig';
 import { FoodSystem } from './systems/FoodSystem';
 import { eventEmitter, EVENTS } from './core/events/EventEmitter';
 import { StatisticsSystem } from './systems/StatisticsSystem';
-import { INITIAL_POPULATION_PER_GROUP, GROUPS, INITIAL_FOOD_COUNT } from './constants';
+import {
+  INITIAL_POPULATION_PER_GROUP,
+  GROUPS,
+  INITIAL_FOOD_COUNT,
+  ENABLE_FOOD_SPAWNING,
+} from './constants';
 
 // Global variables
 const canvas = document.getElementById('simCanvas') as HTMLCanvasElement;
@@ -147,6 +152,11 @@ SimState.paused = wasPaused;
 eventEmitter.emit(EVENTS.POPULATION_CHANGED, {
   population: world.getPopulation(),
 });
+
+// Update food spawning status indicator
+const foodSpawningStatus = document.getElementById('foodSpawningStatus')!;
+foodSpawningStatus.textContent = ENABLE_FOOD_SPAWNING ? 'ENABLED' : 'DISABLED';
+foodSpawningStatus.style.color = ENABLE_FOOD_SPAWNING ? '#4CAF50' : '#ff4444';
 
 // Only start animation if not paused
 if (!SimState.paused) {

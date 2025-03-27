@@ -7,6 +7,7 @@ export let CANVAS_HEIGHT = window.innerHeight;
 export const NUMBER_OF_GROUPS = 2;
 export const INITIAL_POPULATION_PER_GROUP = 10;
 export const INITIAL_FOOD_COUNT = 20;
+export const ENABLE_FOOD_SPAWNING = false; // Controls whether food spawns after initialization
 
 // Array of groups with their respective colors
 export const GROUPS: Group[] = [

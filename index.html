@@ -207,6 +207,9 @@
         <div class="stat paused-indicator">
             Status: <span id="pauseStatus">PAUSED</span>
         </div>
+        <div class="stat">
+            Food Spawning: <span id="foodSpawningStatus">ENABLED</span>
+        </div>
         <button id="toggleBtn">▶️</button>
     </div>
     <canvas id="simCanvas"></canvas>
@@ -229,6 +232,10 @@
                 <div class="stat-item">
                     <div class="stat-label">Average FPS</div>
                     <div class="stat-value"><span id="finalFPS">0</span></div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Food Spawning</div>
+                    <div class="stat-value"><span id="finalFoodSpawningStatus">ENABLED</span></div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">Group Statistics</div>

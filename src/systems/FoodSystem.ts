@@ -6,6 +6,8 @@ import { SimUtils } from '../utils/SimUtils';
 import { World } from '../core/World';
 import { Entity } from '../core/ecs/Entity';
 import { eventEmitter, EVENTS } from '../core/events/EventEmitter';
+import { ENABLE_FOOD_SPAWNING } from '../constants';
+import { SimState } from '../core/config/SimState';
 
 export class FoodSystem extends System {
   constructor(private world: World) {
@@ -30,7 +32,11 @@ export class FoodSystem extends System {
   update(): void {
     // Make sure to remove consumed food first before spawning new food
     this.removeConsumedFood();
-    this.spawnFood();
+
+    // Only spawn new food if enabled and simulation is not paused
+    if (ENABLE_FOOD_SPAWNING && !SimState.paused) {
+      this.spawnFood();
+    }
   }
 
   private spawnFood(): void {

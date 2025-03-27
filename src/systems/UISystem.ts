@@ -2,6 +2,7 @@ import { SimState } from '../core/config/SimState';
 import { System } from '../core/ecs/System';
 import { World } from '../core/World';
 import { eventEmitter, EVENTS } from '../core/events/EventEmitter';
+import { ENABLE_FOOD_SPAWNING } from '../constants';
 
 export class UISystem extends System {
   private world: World;
@@ -84,6 +85,11 @@ export class UISystem extends System {
       SimState.deathsByStarvation.toString();
     document.getElementById('finalOldAgeDeaths')!.textContent = SimState.deathsByOldAge.toString();
     document.getElementById('finalFPS')!.textContent = SimState.avgFps.toString();
+
+    // Set food spawning status
+    const finalFoodSpawningStatus = document.getElementById('finalFoodSpawningStatus')!;
+    finalFoodSpawningStatus.textContent = ENABLE_FOOD_SPAWNING ? 'ENABLED' : 'DISABLED';
+    finalFoodSpawningStatus.style.color = ENABLE_FOOD_SPAWNING ? '#4CAF50' : '#ff4444';
 
     // Display group statistics
     const groupStatsContainer = document.getElementById('groupStatsContainer');
