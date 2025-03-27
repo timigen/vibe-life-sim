@@ -22,4 +22,24 @@ export class Vector2D {
     this.y *= scalar;
     return this;
   }
+
+  add(other: Vector2D): Vector2D {
+    this.x += other.x;
+    this.y += other.y;
+    return this;
+  }
+
+  subtract(other: Vector2D): Vector2D {
+    this.x -= other.x;
+    this.y -= other.y;
+    return this;
+  }
+
+  dot(other: Vector2D): number {
+    return this.x * other.x + this.y * other.y;
+  }
+
+  clone(): Vector2D {
+    return new Vector2D(this.x, this.y);
+  }
 }

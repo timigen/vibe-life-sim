@@ -18,6 +18,7 @@ import { MovementSystem } from './systems/MovementSystem';
 import { LifecycleSystem } from './systems/LifecycleSystem';
 import { MatingSystem } from './systems/MatingSystem';
 import { GameUtils } from './utils/GameUtils';
+import { CollisionSystem } from './systems/CollisionSystem';
 
 // Global variables
 const canvas = document.getElementById('simCanvas') as HTMLCanvasElement;
@@ -28,6 +29,7 @@ canvas.height = GameState.CANVAS_HEIGHT;
 const world = new World(INITIAL_POPULATION_PER_GROUP * GROUPS.length * 2 * 2); // Double initial size for growth
 world.addSystem(new RenderingSystem(ctx));
 world.addSystem(new MovementSystem());
+world.addSystem(new CollisionSystem());
 world.addSystem(new LifecycleSystem(world));
 world.addSystem(new MatingSystem(world));
 
