@@ -27,6 +27,20 @@ export class LifecycleSystem extends System {
       life.age++;
       life.hunger += life.restTimer > 0 ? 0.2 : 1;
 
+      // Update group stats
+      const groupStat = GameState.groupStats.find(stat => stat.color === life.group.color);
+      if (groupStat) {
+        const currentGroupPopulation = this.entities.filter(
+          e => e.getComponent(LifeComponent)?.group.color === life.group.color
+        ).length;
+        if (currentGroupPopulation > groupStat.maxPopulation) {
+          groupStat.maxPopulation = currentGroupPopulation;
+        }
+        if (life.age > groupStat.highestGeneration) {
+          groupStat.highestGeneration = life.age;
+        }
+      }
+
       // Handle pregnancy and birth
       if (life.sex === 'female' && life.isPregnant) {
         life.gestationTimer--;

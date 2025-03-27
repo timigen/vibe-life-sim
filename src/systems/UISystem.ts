@@ -70,6 +70,23 @@ export class UISystem extends System {
       GameState.deathsByStarvation.toString();
     document.getElementById('finalOldAgeDeaths')!.textContent = GameState.deathsByOldAge.toString();
     document.getElementById('finalFPS')!.textContent = GameState.avgFps.toString();
+
+    // Display group statistics
+    const groupStatsContainer = document.getElementById('groupStatsContainer');
+    if (groupStatsContainer) {
+      groupStatsContainer.innerHTML = '';
+      GameState.groupStats.forEach(stat => {
+        const statElement = document.createElement('div');
+        statElement.className = 'group-stat';
+        statElement.innerHTML = `
+          <div style="color: ${stat.color};">Group Color: ${stat.color}</div>
+          <div>Max Population: ${stat.maxPopulation}</div>
+          <div>Highest Generation: ${stat.highestGeneration}</div>
+        `;
+        groupStatsContainer.appendChild(statElement);
+      });
+    }
+
     document.getElementById('simulationOver')!.style.display = 'flex';
   }
 }

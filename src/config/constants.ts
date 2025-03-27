@@ -36,4 +36,9 @@ export class GameState {
   static maxPopulation = 0;
   static deathsByStarvation = 0;
   static deathsByOldAge = 0;
+  static groupStats = GROUPS.map(group => ({
+    color: group.color,
+    maxPopulation: 0,
+    highestGeneration: 0,
+  }));
 }
