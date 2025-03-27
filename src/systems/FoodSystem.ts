@@ -14,7 +14,11 @@ export class FoodSystem extends System {
     // Listen for food consumption events to remove the consumed food
     eventEmitter.on(EVENTS.FOOD_CONSUMED, async (data: any) => {
       if (data.foodEntity) {
-        this.world.removeEntity(data.foodEntity);
+        const food = data.foodEntity.getComponent(FoodComponent);
+        if (food) {
+          food.consumed = true;
+          this.world.removeFood(data.foodEntity);
+        }
       }
     });
   }
@@ -24,23 +28,34 @@ export class FoodSystem extends System {
   }
 
   update(): void {
-    this.spawnFood();
+    // Make sure to remove consumed food first before spawning new food
     this.removeConsumedFood();
+    this.spawnFood();
   }
 
   private spawnFood(): void {
-    if (Math.random() < FOOD_CONFIG.SPAWN_BASE_CHANCE) {
+    // Calculate population-based spawn chance
+    const currentPopulation = this.world.getPopulation();
+    const populationFactor = currentPopulation * FOOD_CONFIG.POPULATION_SPAWN_FACTOR;
+    const spawnChance = Math.min(
+      FOOD_CONFIG.MAX_SPAWN_CHANCE,
+      FOOD_CONFIG.SPAWN_BASE_CHANCE + populationFactor
+    );
+
+    if (Math.random() < spawnChance) {
       const position = SimUtils.getRandomPosition(FOOD_CONFIG.RADIUS);
       this.world.spawnFood(position.x, position.y);
     }
   }
 
   private removeConsumedFood(): void {
-    // Check for food marked as consumed and remove it
-    for (const entity of this.filteredEntities) {
+    // Check for food marked as consumed and remove it immediately
+    // Use a reverse loop to safely remove entities during iteration
+    for (let i = this.filteredEntities.length - 1; i >= 0; i--) {
+      const entity = this.filteredEntities[i];
       const food = entity.getComponent(FoodComponent);
       if (food?.consumed) {
-        this.world.removeEntity(entity);
+        this.world.removeFood(entity);
       }
     }
   }

@@ -16,6 +16,11 @@ export class Entity {
     this.world = world;
   }
 
+  // Get the world reference
+  getWorld(): any {
+    return this.world;
+  }
+
   addComponent<T extends Component>(component: T): void {
     const componentName = component.constructor.name;
     const hadComponent = this.components.has(componentName);

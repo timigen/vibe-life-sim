@@ -96,7 +96,7 @@ export class CollisionSystem extends System {
     const life = lifeEntity.getComponent(LifeComponent);
     const food = foodEntity.getComponent(FoodComponent);
 
-    if (!life || !food || life.dead) return;
+    if (!life || !food || life.dead || food.consumed) return;
 
     const distance = lifePos.pos.distanceTo(foodPos.pos);
     const minDistance = life.radius + food.radius;
@@ -105,16 +105,21 @@ export class CollisionSystem extends System {
       // Food is consumed
       life.hunger = Math.max(0, life.hunger - 400); // Reduce hunger by a significant amount
 
+      // Mark the entity for removal immediately
+      food.consumed = true;
+
+      // Get the world reference from the entity
+      const world = foodEntity.getWorld();
+      if (world) {
+        world.removeFood(foodEntity);
+      }
+
       // Emit food consumed event
       eventEmitter.emit(EVENTS.FOOD_CONSUMED, {
         lifeEntity,
         foodEntity,
         position: { x: foodPos.pos.x, y: foodPos.pos.y },
       });
-
-      // Mark the entity for removal
-      // Note: The actual removal is handled elsewhere
-      food.consumed = true;
     }
   }
 

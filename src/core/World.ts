@@ -88,6 +88,17 @@ export class World {
     }
   }
 
+  removeFood(foodEntity: Entity): void {
+    const food = foodEntity.getComponent(FoodComponent);
+    if (!food) return;
+
+    // Ensure food is marked as consumed
+    food.consumed = true;
+
+    // Remove from entity list
+    this.removeEntity(foodEntity);
+  }
+
   addSystem(system: System): void {
     this.systems.push(system);
     // Refresh entity filtering for this system with existing entities
