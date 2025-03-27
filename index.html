@@ -114,6 +114,20 @@
         #toggleBtn:hover {
             background: rgba(255, 255, 255, 0.3);
         }
+        .group-stat {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .group-stat div {
+            font-size: 0.9em;
+            color: #aaa;
+        }
+        .group-stat div:nth-child(2), .group-stat div:nth-child(3) {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #fff;
+        }
     </style>
 </head>
 <body>
@@ -140,7 +154,7 @@
     <canvas id="simCanvas"></canvas>
     <div id="simulationOver">
         <div class="simulation-over-content">
-            <h2>Game Over!</h2>
+            <h2>Simulation Over!</h2>
             <div class="stats-container">
                 <div class="stat-item">
                     <div class="stat-label">Maximum Population</div>
@@ -157,6 +171,12 @@
                 <div class="stat-item">
                     <div class="stat-label">Average FPS</div>
                     <div class="stat-value"><span id="finalFPS">0</span></div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Group Statistics</div>
+                    <div class="stat-value" id="groupStatsContainer">
+                        <!-- Group stats will be dynamically inserted here -->
+                    </div>
                 </div>
             </div>
             <button onclick="location.reload()">Restart Simulation</button>
