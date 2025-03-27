@@ -3,6 +3,10 @@ import { System } from './System';
 import { LifePool } from './LifePool';
 import { Group } from '../types/Group';
 import { LifeComponent } from '../components/LifeComponent';
+import { FoodComponent } from '../components/FoodComponent';
+import { PositionComponent } from '../components/PositionComponent';
+import { FOOD_CONFIG } from '../config/FoodConfig';
+import { Vector2D } from '../utils/Vector2D';
 
 export class World {
   private entities: Entity[] = [];
@@ -13,6 +17,13 @@ export class World {
     this.lifePool = new LifePool(initialLifePoolSize);
   }
 
+  spawnFood(x: number, y: number): void {
+    const foodEntity = new Entity();
+    foodEntity.addComponent(new PositionComponent(new Vector2D(x, y)));
+    foodEntity.addComponent(new FoodComponent(FOOD_CONFIG.RADIUS));
+    this.addEntity(foodEntity);
+  }
+
   spawnLife(x: number, y: number, group: Group, sex: 'male' | 'female'): Entity {
     const entity = this.lifePool.spawn(x, y, group, sex);
     this.addEntity(entity);
@@ -20,6 +31,11 @@ export class World {
   }
 
   removeLife(entity: Entity): void {
+    const position = entity.getComponent(PositionComponent);
+    if (position) {
+      // Spawn food at the death location
+      this.spawnFood(position.position.x, position.position.y);
+    }
     this.removeEntity(entity);
     this.lifePool.despawn(entity);
   }
@@ -58,6 +74,10 @@ export class World {
 
   getEntities(): Entity[] {
     return this.entities;
+  }
+
+  getFoods(): Entity[] {
+    return this.entities.filter(entity => entity.hasComponent(FoodComponent));
   }
 
   getLifeCount(): number {

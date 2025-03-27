@@ -31,7 +31,6 @@ world.addSystem(new RenderingSystem(ctx));
 world.addSystem(new MovementSystem());
 world.addSystem(new LifecycleSystem(world));
 world.addSystem(new MatingSystem(world));
-let foods: Entity[] = [];
 
 function getRandom(min: number, max: number): number {
   return Math.random() * (max - min) + min;
@@ -58,11 +57,7 @@ function initializeSimulation(): void {
   for (let i = 0; i < INITIAL_FOOD_COUNT; i++) {
     const x = getRandom(FOOD_CONFIG.RADIUS, GameState.CANVAS_WIDTH - FOOD_CONFIG.RADIUS);
     const y = getRandom(FOOD_CONFIG.RADIUS, GameState.CANVAS_HEIGHT - FOOD_CONFIG.RADIUS);
-    const foodEntity = new Entity();
-    foodEntity.addComponent(new PositionComponent(new Vector2D(x, y)));
-    foodEntity.addComponent(new FoodComponent(FOOD_CONFIG.RADIUS));
-    world.addEntity(foodEntity);
-    foods.push(foodEntity);
+    world.spawnFood(x, y);
   }
 }
 
@@ -70,32 +65,30 @@ function spawnFood(): void {
   if (Math.random() < FOOD_CONFIG.SPAWN_BASE_CHANCE) {
     const x = getRandom(FOOD_CONFIG.RADIUS, GameState.CANVAS_WIDTH - FOOD_CONFIG.RADIUS);
     const y = getRandom(FOOD_CONFIG.RADIUS, GameState.CANVAS_HEIGHT - FOOD_CONFIG.RADIUS);
-    const foodEntity = new Entity();
-    foodEntity.addComponent(new PositionComponent(new Vector2D(x, y)));
-    foodEntity.addComponent(new FoodComponent(FOOD_CONFIG.RADIUS));
-    world.addEntity(foodEntity);
-    foods.push(foodEntity);
+    world.spawnFood(x, y);
   }
 }
 
 function processEating(): void {
   const entities = world.getEntities();
-  for (let i = foods.length - 1; i >= 0; i--) {
-    const food = foods[i];
-    const foodPos = food.getComponent(PositionComponent)!;
+  for (let i = entities.length - 1; i >= 0; i--) {
+    const entity = entities[i];
+    if (!entity.hasComponent(FoodComponent)) continue;
 
-    for (const entity of entities) {
-      if (!entity.hasComponent(LifeComponent)) continue;
+    const foodPos = entity.getComponent(PositionComponent)!;
+    const foodComponent = entity.getComponent(FoodComponent)!;
 
-      const life = entity.getComponent(LifeComponent)!;
-      const lifePos = entity.getComponent(PositionComponent)!;
+    for (const lifeEntity of entities) {
+      if (!lifeEntity.hasComponent(LifeComponent)) continue;
 
-      if (lifePos.position.distanceTo(foodPos.position) < life.radius + FOOD_CONFIG.RADIUS) {
+      const life = lifeEntity.getComponent(LifeComponent)!;
+      const lifePos = lifeEntity.getComponent(PositionComponent)!;
+
+      if (lifePos.position.distanceTo(foodPos.position) < life.radius + foodComponent.radius) {
         life.hunger = -LIFE_CONFIG.FULLNESS_DURATION;
         life.radius = Math.min(life.radius + LIFE_CONFIG.SIZE_INCREMENT, LIFE_CONFIG.MAX_RADIUS);
 
-        world.removeEntity(food);
-        foods.splice(i, 1);
+        world.removeEntity(entity);
         break;
       }
     }
@@ -192,7 +185,7 @@ function render() {
   }
 
   // Draw foods
-  for (const food of foods) {
+  for (const food of world.getFoods()) {
     const position = food.getComponent(PositionComponent)!;
     const foodComponent = food.getComponent(FoodComponent)!;
     ctx.beginPath();
