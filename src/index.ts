@@ -1,10 +1,7 @@
-import { Group } from './types/Group';
-import { Vector2D } from './utils/Vector2D';
 import { LIFE_CONFIG } from './config/LifeConfig';
 import { FOOD_CONFIG } from './config/FoodConfig';
 import { INITIAL_POPULATION_PER_GROUP, INITIAL_FOOD_COUNT, GROUPS } from './config/constants';
 import { World } from './ecs/World';
-import { Entity } from './ecs/Entity';
 import { FoodComponent } from './components/FoodComponent';
 import { PositionComponent } from './components/PositionComponent';
 import { LifeComponent } from './components/LifeComponent';
