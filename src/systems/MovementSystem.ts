@@ -3,7 +3,7 @@ import { Entity } from '../ecs/Entity';
 import { LifeComponent } from '../components/LifeComponent';
 import { PositionComponent } from '../components/PositionComponent';
 import { LIFE_CONFIG } from '../config/LifeConfig';
-import { CANVAS_WIDTH, CANVAS_HEIGHT } from '../config/GameConfig';
+import { GameState } from '../config/constants';
 import { Vector2D } from '../utils/Vector2D';
 
 export class MovementSystem extends System {
@@ -30,14 +30,14 @@ export class MovementSystem extends System {
       position.position.x += position.velocity.x;
       position.position.y += position.velocity.y;
 
-      // Keep within bounds
+      // Keep within bounds using current canvas dimensions
       position.position.x = Math.max(
         life.radius,
-        Math.min(CANVAS_WIDTH - life.radius, position.position.x)
+        Math.min(GameState.CANVAS_WIDTH - life.radius, position.position.x)
       );
       position.position.y = Math.max(
         life.radius,
-        Math.min(CANVAS_HEIGHT - life.radius, position.position.y)
+        Math.min(GameState.CANVAS_HEIGHT - life.radius, position.position.y)
       );
     }
   }
