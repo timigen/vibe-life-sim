@@ -1,6 +1,4 @@
 import { Group } from './types/Group';
-import { LifeConfig } from './types/LifeConfig';
-import { FoodConfig } from './types/FoodConfig';
 import { Vector2D } from './utils/Vector2D';
 import { LIFE_CONFIG } from './config/LifeConfig';
 import { FOOD_CONFIG } from './config/FoodConfig';
@@ -19,6 +17,7 @@ import { RenderingSystem } from './systems/RenderingSystem';
 import { MovementSystem } from './systems/MovementSystem';
 import { LifecycleSystem } from './systems/LifecycleSystem';
 import { MatingSystem } from './systems/MatingSystem';
+import { GameUtils } from './utils/GameUtils';
 
 // Global variables
 const canvas = document.getElementById('simCanvas') as HTMLCanvasElement;
@@ -32,40 +31,27 @@ world.addSystem(new MovementSystem());
 world.addSystem(new LifecycleSystem(world));
 world.addSystem(new MatingSystem(world));
 
-function getRandom(min: number, max: number): number {
-  return Math.random() * (max - min) + min;
-}
-
 function initializeSimulation(): void {
   // Initialize life forms
   for (const group of GROUPS) {
     for (let i = 0; i < INITIAL_POPULATION_PER_GROUP; i++) {
-      const x = getRandom(
-        LIFE_CONFIG.INITIAL_RADIUS,
-        GameState.CANVAS_WIDTH - LIFE_CONFIG.INITIAL_RADIUS
-      );
-      const y = getRandom(
-        LIFE_CONFIG.INITIAL_RADIUS,
-        GameState.CANVAS_HEIGHT - LIFE_CONFIG.INITIAL_RADIUS
-      );
-      world.spawnLife(x, y, group, 'male');
-      world.spawnLife(x, y, group, 'female');
+      const position = GameUtils.getRandomPosition(LIFE_CONFIG.INITIAL_RADIUS);
+      world.spawnLife(position.x, position.y, group, 'male');
+      world.spawnLife(position.x, position.y, group, 'female');
     }
   }
 
   // Initialize food
   for (let i = 0; i < INITIAL_FOOD_COUNT; i++) {
-    const x = getRandom(FOOD_CONFIG.RADIUS, GameState.CANVAS_WIDTH - FOOD_CONFIG.RADIUS);
-    const y = getRandom(FOOD_CONFIG.RADIUS, GameState.CANVAS_HEIGHT - FOOD_CONFIG.RADIUS);
-    world.spawnFood(x, y);
+    const position = GameUtils.getRandomPosition(FOOD_CONFIG.RADIUS);
+    world.spawnFood(position.x, position.y);
   }
 }
 
 function spawnFood(): void {
   if (Math.random() < FOOD_CONFIG.SPAWN_BASE_CHANCE) {
-    const x = getRandom(FOOD_CONFIG.RADIUS, GameState.CANVAS_WIDTH - FOOD_CONFIG.RADIUS);
-    const y = getRandom(FOOD_CONFIG.RADIUS, GameState.CANVAS_HEIGHT - FOOD_CONFIG.RADIUS);
-    world.spawnFood(x, y);
+    const position = GameUtils.getRandomPosition(FOOD_CONFIG.RADIUS);
+    world.spawnFood(position.x, position.y);
   }
 }
 
@@ -123,6 +109,9 @@ function update() {
 
   if (world.getLifeCount() === 0) {
     document.getElementById('maxPopDisplay')!.textContent = GameState.maxPopulation.toString();
+    document.getElementById('finalStarvationDeaths')!.textContent = GameState.deathsByStarvation.toString();
+    document.getElementById('finalOldAgeDeaths')!.textContent = GameState.deathsByOldAge.toString();
+    document.getElementById('finalFPS')!.textContent = GameState.fps.toString();
     document.getElementById('gameOver')!.style.display = 'flex';
     GameState.paused = true;
     return;
@@ -133,73 +122,9 @@ function update() {
   }
 }
 
-function render() {
-  // Draw lives
-  const entities = world.getEntities();
-  for (const entity of entities) {
-    if (!entity.hasComponent(LifeComponent)) continue;
-
-    const life = entity.getComponent(LifeComponent)!;
-    const position = entity.getComponent(PositionComponent)!;
-
-    ctx.beginPath();
-    ctx.arc(position.position.x, position.position.y, life.radius, 0, Math.PI * 2);
-    ctx.fillStyle = life.group.color;
-    ctx.fill();
-    ctx.closePath();
-
-    // Draw sex indicators
-    if (life.sex === 'male') {
-      ctx.strokeStyle = '#fff';
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.moveTo(position.position.x - life.radius / 2, position.position.y);
-      ctx.lineTo(position.position.x + life.radius / 2, position.position.y);
-      ctx.moveTo(position.position.x, position.position.y - life.radius / 2);
-      ctx.lineTo(position.position.x, position.position.y + life.radius / 2);
-      ctx.stroke();
-    } else {
-      ctx.beginPath();
-      ctx.arc(position.position.x, position.position.y, life.radius / 3, 0, Math.PI * 2);
-      ctx.fillStyle = '#fff';
-      ctx.fill();
-    }
-
-    // Draw pregnancy indicator
-    if (life.sex === 'female' && life.isPregnant) {
-      ctx.beginPath();
-      ctx.arc(position.position.x, position.position.y, life.radius + 2, 0, Math.PI * 2);
-      ctx.strokeStyle = 'yellow';
-      ctx.lineWidth = 2;
-      ctx.stroke();
-    }
-
-    // Draw rest indicator
-    if (life.restTimer > 0) {
-      ctx.beginPath();
-      ctx.arc(position.position.x, position.position.y, life.radius + 4, 0, Math.PI * 2);
-      ctx.strokeStyle = 'cyan';
-      ctx.lineWidth = 1;
-      ctx.stroke();
-    }
-  }
-
-  // Draw foods
-  for (const food of world.getFoods()) {
-    const position = food.getComponent(PositionComponent)!;
-    const foodComponent = food.getComponent(FoodComponent)!;
-    ctx.beginPath();
-    ctx.arc(position.position.x, position.position.y, foodComponent.radius, 0, Math.PI * 2);
-    ctx.fillStyle = '#ff00ff';
-    ctx.fill();
-    ctx.closePath();
-  }
-}
-
 function animate() {
   GameState.animationFrameId = requestAnimationFrame(animate);
   update();
-  render();
 }
 
 window.addEventListener('resize', () => {

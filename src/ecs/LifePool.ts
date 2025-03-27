@@ -79,15 +79,7 @@ export class LifePool {
     }
   }
 
-  getActiveEntities(): Entity[] {
-    return Array.from(this.activeEntities);
-  }
-
   getActiveCount(): number {
     return this.activeEntities.size;
-  }
-
-  getPoolSize(): number {
-    return this.pool.length;
   }
 }

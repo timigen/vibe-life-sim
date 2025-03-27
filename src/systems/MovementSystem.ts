@@ -3,8 +3,8 @@ import { Entity } from '../ecs/Entity';
 import { LifeComponent } from '../components/LifeComponent';
 import { PositionComponent } from '../components/PositionComponent';
 import { LIFE_CONFIG } from '../config/LifeConfig';
-import { GameState } from '../config/constants';
 import { Vector2D } from '../utils/Vector2D';
+import { GameUtils } from '../utils/GameUtils';
 
 export class MovementSystem extends System {
   shouldProcessEntity(entity: Entity): boolean {
@@ -21,8 +21,8 @@ export class MovementSystem extends System {
 
       // Random movement when no target
       if (Math.random() < 0.02) {
-        const angle = Math.random() * Math.PI * 2;
-        const speed = LIFE_CONFIG.SPEED * (1 + Math.random());
+        const angle = GameUtils.getRandomAngle();
+        const speed = GameUtils.getRandomSpeed(LIFE_CONFIG.SPEED);
         position.velocity = new Vector2D(Math.cos(angle) * speed, Math.sin(angle) * speed);
       }
 
@@ -30,15 +30,9 @@ export class MovementSystem extends System {
       position.position.x += position.velocity.x;
       position.position.y += position.velocity.y;
 
-      // Keep within bounds using current canvas dimensions
-      position.position.x = Math.max(
-        life.radius,
-        Math.min(GameState.CANVAS_WIDTH - life.radius, position.position.x)
-      );
-      position.position.y = Math.max(
-        life.radius,
-        Math.min(GameState.CANVAS_HEIGHT - life.radius, position.position.y)
-      );
+      // Keep within bounds
+      const clampedPosition = GameUtils.clampPosition(position.position, life.radius);
+      position.position = clampedPosition;
     }
   }
 }

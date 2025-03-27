@@ -17,9 +17,6 @@ export class RenderingSystem extends System {
   }
 
   update(deltaTime: number): void {
-    // Clear canvas
-    this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
-
     // Render all entities
     for (const entity of this.entities) {
       const position = entity.getComponent(PositionComponent);

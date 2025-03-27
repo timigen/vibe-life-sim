@@ -53,7 +53,8 @@ export class LifecycleSystem extends System {
       } else if (life.hunger > LIFE_CONFIG.HUNGER_LIMIT) {
         life.dead = true;
         GameState.deathsByStarvation++;
-        document.getElementById('starvationDeaths')!.textContent = GameState.deathsByStarvation.toString();
+        document.getElementById('starvationDeaths')!.textContent =
+          GameState.deathsByStarvation.toString();
       } else if (life.radius < LIFE_CONFIG.MIN_RADIUS) {
         life.dead = true;
       }
