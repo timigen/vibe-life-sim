@@ -1,4 +1,4 @@
-export interface MicrobeConfig {
+export interface LifeConfig {
   INITIAL_RADIUS: number;
   MAX_RADIUS: number;
   MIN_RADIUS: number;
