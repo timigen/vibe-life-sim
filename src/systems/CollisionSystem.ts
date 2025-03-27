@@ -3,18 +3,35 @@ import { Entity } from '../ecs/Entity';
 import { LifeComponent } from '../components/LifeComponent';
 import { PositionComponent } from '../components/PositionComponent';
 import { Vector2D } from '../utils/Vector2D';
+import { SpatialGrid } from '../utils/SpatialGrid';
 
 export class CollisionSystem extends System {
+  private spatialGrid: SpatialGrid;
+
+  constructor() {
+    super();
+    this.spatialGrid = new SpatialGrid(50); // Cell size of 50 pixels
+  }
+
   shouldProcessEntity(entity: Entity): boolean {
     return entity.hasComponent(LifeComponent) && entity.hasComponent(PositionComponent);
   }
 
   update(deltaTime: number): void {
-    // Check collisions between all pairs of life forms
-    for (let i = 0; i < this.entities.length; i++) {
-      for (let j = i + 1; j < this.entities.length; j++) {
-        const entityA = this.entities[i];
-        const entityB = this.entities[j];
+    // Update spatial grid with current entity positions
+    this.spatialGrid.update(this.entities);
+
+    // Process collisions using spatial grid
+    const processedPairs = new Set<string>();
+
+    for (const entityA of this.entities) {
+      const potentialCollisions = this.spatialGrid.getPotentialCollisions(entityA);
+
+      for (const entityB of potentialCollisions) {
+        // Avoid processing the same pair twice
+        const pairKey = [entityA.id, entityB.id].sort().join(',');
+        if (processedPairs.has(pairKey)) continue;
+        processedPairs.add(pairKey);
 
         const lifeA = entityA.getComponent(LifeComponent);
         const lifeB = entityB.getComponent(LifeComponent);
