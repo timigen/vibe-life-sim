@@ -17,7 +17,7 @@ export class UISystem extends System {
     return false; // This system doesn't process entities
   }
 
-  update(deltaTime: number): void {
+  update(): void {
     // Update FPS counter
     this.frameCount++;
     const now = performance.now();

@@ -26,9 +26,9 @@ export class MovementSystem extends System {
         position.velocity = new Vector2D(Math.cos(angle) * speed, Math.sin(angle) * speed);
       }
 
-      // Update position
-      position.position.x += position.velocity.x;
-      position.position.y += position.velocity.y;
+      // Update position using deltaTime
+      position.position.x += position.velocity.x * deltaTime;
+      position.position.y += position.velocity.y * deltaTime;
 
       // Keep within bounds
       const clampedPosition = GameUtils.clampPosition(position.position, life.radius);

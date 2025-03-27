@@ -16,7 +16,7 @@ export class RenderingSystem extends System {
     );
   }
 
-  update(deltaTime: number): void {
+  update(): void {
     // Render all entities
     for (const entity of this.entities) {
       const position = entity.getComponent(PositionComponent);

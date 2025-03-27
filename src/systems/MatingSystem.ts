@@ -14,7 +14,7 @@ export class MatingSystem extends System {
     return entity.hasComponent(LifeComponent) && entity.hasComponent(PositionComponent);
   }
 
-  update(deltaTime: number): void {
+  update(): void {
     for (let i = 0; i < this.entities.length; i++) {
       for (let j = i + 1; j < this.entities.length; j++) {
         const aEntity = this.entities[i];

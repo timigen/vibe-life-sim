@@ -24,8 +24,9 @@ export class LifecycleSystem extends System {
       const life = entity.getComponent(LifeComponent);
       if (!life) continue;
 
-      life.age++;
-      life.hunger += life.restTimer > 0 ? 0.2 : 1;
+      // Use deltaTime for consistent aging and hunger accumulation
+      life.age += deltaTime;
+      life.hunger += (life.restTimer > 0 ? 0.2 : 1) * deltaTime;
 
       // Update group stats
       const groupStat = GameState.groupStats.find(stat => stat.color === life.group.color);
@@ -43,7 +44,7 @@ export class LifecycleSystem extends System {
 
       // Handle pregnancy and birth
       if (life.sex === 'female' && life.isPregnant) {
-        life.gestationTimer--;
+        life.gestationTimer -= deltaTime;
         if (life.gestationTimer <= 0) {
           const position = entity.getComponent(PositionComponent)!;
           const offsetX = (Math.random() - 0.5) * 10;
