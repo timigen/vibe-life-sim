@@ -33,7 +33,7 @@ export class LifePool {
         false,
         0,
         0,
-        { color: '#000000' },
+        { color: '#000000', name: 'default' },
         'male'
       )
     );

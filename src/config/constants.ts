@@ -11,13 +11,14 @@ export const NUMBER_OF_GROUPS = 2;
 // Interface for defining a group
 export interface Group {
   color: string;
+  name: string;
 }
 
 // Array of groups with their respective colors
 export const GROUPS: Group[] = [
-  { color: '#ff0000' }, // Red
-  { color: '#00ff00' }, // Green
-  { color: '#0000ff' }, // Blue
+  { color: '#ff0000', name: '0' }, // Red
+  { color: '#00ff00', name: '1' }, // Green
+  { color: '#0000ff', name: '2' }, // Blue
 ].slice(0, NUMBER_OF_GROUPS);
 
 // Game state class for mutable variables
@@ -38,6 +39,7 @@ export class GameState {
   static deathsByOldAge = 0;
   static groupStats = GROUPS.map(group => ({
     color: group.color,
+    name: group.name,
     maxPopulation: 0,
     highestGeneration: 0,
   }));
