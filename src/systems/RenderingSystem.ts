@@ -10,8 +10,10 @@ export class RenderingSystem extends System {
   }
 
   shouldProcessEntity(entity: Entity): boolean {
-    return entity.hasComponent(PositionComponent) && 
-           (entity.hasComponent(LifeComponent) || entity.hasComponent(FoodComponent));
+    return (
+      entity.hasComponent(PositionComponent) &&
+      (entity.hasComponent(LifeComponent) || entity.hasComponent(FoodComponent))
+    );
   }
 
   update(deltaTime: number): void {
@@ -40,8 +42,8 @@ export class RenderingSystem extends System {
     this.ctx.fill();
 
     this.ctx.lineWidth = 1;
-    if (life.sex === "male") {
-      this.ctx.strokeStyle = "#fff";
+    if (life.sex === 'male') {
+      this.ctx.strokeStyle = '#fff';
       this.ctx.beginPath();
       this.ctx.moveTo(position.position.x - life.radius / 2, position.position.y);
       this.ctx.lineTo(position.position.x + life.radius / 2, position.position.y);
@@ -51,14 +53,14 @@ export class RenderingSystem extends System {
     } else {
       this.ctx.beginPath();
       this.ctx.arc(position.position.x, position.position.y, life.radius / 3, 0, Math.PI * 2);
-      this.ctx.fillStyle = "#fff";
+      this.ctx.fillStyle = '#fff';
       this.ctx.fill();
     }
 
-    if (life.sex === "female" && life.isPregnant) {
+    if (life.sex === 'female' && life.isPregnant) {
       this.ctx.beginPath();
       this.ctx.arc(position.position.x, position.position.y, life.radius + 2, 0, Math.PI * 2);
-      this.ctx.strokeStyle = "yellow";
+      this.ctx.strokeStyle = 'yellow';
       this.ctx.lineWidth = 2;
       this.ctx.stroke();
     }
@@ -66,7 +68,7 @@ export class RenderingSystem extends System {
     if (life.restTimer > 0) {
       this.ctx.beginPath();
       this.ctx.arc(position.position.x, position.position.y, life.radius + 4, 0, Math.PI * 2);
-      this.ctx.strokeStyle = "cyan";
+      this.ctx.strokeStyle = 'cyan';
       this.ctx.lineWidth = 1;
       this.ctx.stroke();
     }
@@ -75,7 +77,7 @@ export class RenderingSystem extends System {
   private drawFood(position: PositionComponent, food: FoodComponent): void {
     this.ctx.beginPath();
     this.ctx.arc(position.position.x, position.position.y, food.radius, 0, Math.PI * 2);
-    this.ctx.fillStyle = "#ff00ff";
+    this.ctx.fillStyle = '#ff00ff';
     this.ctx.fill();
   }
-} 
+}

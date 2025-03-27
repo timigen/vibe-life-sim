@@ -30,4 +30,4 @@ export class World {
   getEntities(): Entity[] {
     return this.entities;
   }
-} 
+}

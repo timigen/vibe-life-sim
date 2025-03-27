@@ -15,4 +15,4 @@ export class LifeComponent extends Component {
   ) {
     super();
   }
-} 
+}

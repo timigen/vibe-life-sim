@@ -18,4 +18,4 @@ export abstract class System {
 
   abstract shouldProcessEntity(entity: Entity): boolean;
   abstract update(deltaTime: number): void;
-} 
+}

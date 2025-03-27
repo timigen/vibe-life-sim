@@ -8,4 +8,4 @@ export class PositionComponent extends Component {
   ) {
     super();
   }
-} 
+}

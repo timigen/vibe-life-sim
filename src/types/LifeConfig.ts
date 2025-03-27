@@ -14,4 +14,4 @@ export interface LifeConfig {
   REST_CHANCE: number;
   REST_MIN_DURATION: number;
   REST_MAX_DURATION: number;
-} 
+}

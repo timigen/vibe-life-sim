@@ -14,15 +14,15 @@ export class Entity {
     this.components.set(componentName, component);
   }
 
-  getComponent<T extends Component>(componentType: { new(...args: any[]): T }): T | undefined {
+  getComponent<T extends Component>(componentType: { new (...args: any[]): T }): T | undefined {
     return this.components.get(componentType.name) as T;
   }
 
-  hasComponent<T extends Component>(componentType: { new(...args: any[]): T }): boolean {
+  hasComponent<T extends Component>(componentType: { new (...args: any[]): T }): boolean {
     return this.components.has(componentType.name);
   }
 
-  removeComponent<T extends Component>(componentType: { new(...args: any[]): T }): void {
+  removeComponent<T extends Component>(componentType: { new (...args: any[]): T }): void {
     this.components.delete(componentType.name);
   }
-} 
+}

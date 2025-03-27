@@ -23,10 +23,7 @@ export class MovementSystem extends System {
       if (Math.random() < 0.02) {
         const angle = Math.random() * Math.PI * 2;
         const speed = LIFE_CONFIG.SPEED * (1 + Math.random());
-        position.velocity = new Vector2D(
-          Math.cos(angle) * speed,
-          Math.sin(angle) * speed
-        );
+        position.velocity = new Vector2D(Math.cos(angle) * speed, Math.sin(angle) * speed);
       }
 
       // Update position
@@ -34,8 +31,14 @@ export class MovementSystem extends System {
       position.position.y += position.velocity.y;
 
       // Keep within bounds
-      position.position.x = Math.max(life.radius, Math.min(CANVAS_WIDTH - life.radius, position.position.x));
-      position.position.y = Math.max(life.radius, Math.min(CANVAS_HEIGHT - life.radius, position.position.y));
+      position.position.x = Math.max(
+        life.radius,
+        Math.min(CANVAS_WIDTH - life.radius, position.position.x)
+      );
+      position.position.y = Math.max(
+        life.radius,
+        Math.min(CANVAS_HEIGHT - life.radius, position.position.y)
+      );
     }
   }
-} 
+}

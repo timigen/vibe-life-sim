@@ -15,10 +15,12 @@ export class LifecycleSystem extends System {
 
       life.age++;
       life.hunger += life.restTimer > 0 ? 0.2 : 1;
-      
-      if (life.age > LIFE_CONFIG.AGE_LIMIT ||
-          life.hunger > LIFE_CONFIG.HUNGER_LIMIT ||
-          life.radius < LIFE_CONFIG.MIN_RADIUS) {
+
+      if (
+        life.age > LIFE_CONFIG.AGE_LIMIT ||
+        life.hunger > LIFE_CONFIG.HUNGER_LIMIT ||
+        life.radius < LIFE_CONFIG.MIN_RADIUS
+      ) {
         life.dead = true;
       }
 
@@ -27,4 +29,4 @@ export class LifecycleSystem extends System {
       }
     }
   }
-} 
+}
