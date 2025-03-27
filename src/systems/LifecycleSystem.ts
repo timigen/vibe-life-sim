@@ -5,9 +5,10 @@ import { PositionComponent } from '../components/PositionComponent';
 import { LIFE_CONFIG } from '../config/LifeConfig';
 import { World } from '../ecs/World';
 import { GameState } from '../config/constants';
+import { UISystem } from './UISystem';
 
 export class LifecycleSystem extends System {
-  constructor(private world: World) {
+  constructor(private world: World, private uiSystem: UISystem) {
     super();
   }
 
@@ -49,19 +50,30 @@ export class LifecycleSystem extends System {
       if (life.age > LIFE_CONFIG.AGE_LIMIT) {
         life.dead = true;
         GameState.deathsByOldAge++;
-        document.getElementById('oldAgeDeaths')!.textContent = GameState.deathsByOldAge.toString();
-      } else if (life.hunger > LIFE_CONFIG.HUNGER_LIMIT) {
-        life.dead = true;
-        GameState.deathsByStarvation++;
-        document.getElementById('starvationDeaths')!.textContent =
-          GameState.deathsByStarvation.toString();
-      } else if (life.radius < LIFE_CONFIG.MIN_RADIUS) {
-        life.dead = true;
       }
 
-      if (life.hunger > LIFE_CONFIG.HUNGER_LIMIT / 2) {
-        life.radius -= LIFE_CONFIG.SIZE_DECREMENT;
+      if (life.hunger > LIFE_CONFIG.HUNGER_LIMIT) {
+        life.dead = true;
+        GameState.deathsByStarvation++;
       }
+
+      if (life.dead) {
+        // Convert to food
+        const position = entity.getComponent(PositionComponent)!;
+        this.world.spawnFood(position.position.x, position.position.y);
+        this.world.removeLife(entity);
+      }
+    }
+
+    // Update max population
+    const currentPopulation = this.world.getLifeCount();
+    if (currentPopulation > GameState.maxPopulation) {
+      GameState.maxPopulation = currentPopulation;
+    }
+
+    // Check for game over
+    if (currentPopulation === 0) {
+      this.uiSystem.showGameOver();
     }
   }
 }

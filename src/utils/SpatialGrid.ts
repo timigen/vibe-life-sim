@@ -1,7 +1,6 @@
 import { Entity } from '../ecs/Entity';
 import { PositionComponent } from '../components/PositionComponent';
 import { LifeComponent } from '../components/LifeComponent';
-import { GameState } from '../config/constants';
 
 export class SpatialGrid {
   private grid: Map<string, Set<Entity>> = new Map();

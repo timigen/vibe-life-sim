@@ -19,6 +19,7 @@ import { LifecycleSystem } from './systems/LifecycleSystem';
 import { MatingSystem } from './systems/MatingSystem';
 import { GameUtils } from './utils/GameUtils';
 import { CollisionSystem } from './systems/CollisionSystem';
+import { UISystem } from './systems/UISystem';
 
 // Global variables
 const canvas = document.getElementById('simCanvas') as HTMLCanvasElement;
@@ -27,11 +28,13 @@ canvas.width = GameState.CANVAS_WIDTH;
 canvas.height = GameState.CANVAS_HEIGHT;
 
 const world = new World(INITIAL_POPULATION_PER_GROUP * GROUPS.length * 2 * 2); // Double initial size for growth
+const uiSystem = new UISystem(world);
 world.addSystem(new RenderingSystem(ctx));
 world.addSystem(new MovementSystem());
 world.addSystem(new CollisionSystem());
-world.addSystem(new LifecycleSystem(world));
+world.addSystem(new LifecycleSystem(world, uiSystem));
 world.addSystem(new MatingSystem(world));
+world.addSystem(uiSystem);
 
 function initializeSimulation(): void {
   // Initialize life forms
@@ -83,38 +86,17 @@ function processEating(): void {
   }
 }
 
-function updateFPS() {
-  const currentTime = performance.now();
-  GameState.frameCount++;
-
-  if (currentTime - GameState.lastTime >= 1000) {
-    GameState.fps = GameState.frameCount;
-    GameState.frameCount = 0;
-    GameState.lastTime = currentTime;
-  }
-}
-
-function update() {
+function update(deltaTime: number) {
   if (GameState.paused) return;
-
-  updateFPS();
 
   ctx.clearRect(0, 0, GameState.CANVAS_WIDTH, GameState.CANVAS_HEIGHT);
   spawnFood();
 
-  world.update(1); // deltaTime of 1 for now
+  world.update(deltaTime);
 
   processEating();
 
-  document.getElementById('populationCount')!.textContent = world.getLifeCount().toString();
-  document.getElementById('fpsCounter')!.textContent = GameState.fps.toString();
-
   if (world.getLifeCount() === 0) {
-    document.getElementById('maxPopDisplay')!.textContent = GameState.maxPopulation.toString();
-    document.getElementById('finalStarvationDeaths')!.textContent = GameState.deathsByStarvation.toString();
-    document.getElementById('finalOldAgeDeaths')!.textContent = GameState.deathsByOldAge.toString();
-    document.getElementById('finalFPS')!.textContent = GameState.fps.toString();
-    document.getElementById('gameOver')!.style.display = 'flex';
     GameState.paused = true;
     return;
   }
@@ -125,8 +107,12 @@ function update() {
 }
 
 function animate() {
-  GameState.animationFrameId = requestAnimationFrame(animate);
-  update();
+  requestAnimationFrame(animate);
+  const now = performance.now();
+  const deltaTime = now - GameState.lastTime;
+  GameState.lastTime = now;
+
+  update(deltaTime);
 }
 
 window.addEventListener('resize', () => {
@@ -140,9 +126,9 @@ document.getElementById('toggleBtn')!.addEventListener('click', () => {
   GameState.paused = !GameState.paused;
   const btn = document.getElementById('toggleBtn')!;
   btn.textContent = GameState.paused ? '▶️' : '⏸';
-  if (!GameState.paused) update();
+  if (!GameState.paused) animate();
 });
 
 // Initialize and start the simulation
 initializeSimulation();
-GameState.animationFrameId = requestAnimationFrame(animate);
+animate();
