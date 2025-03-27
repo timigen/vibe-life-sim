@@ -1,9 +1,17 @@
 // Game initialization constants
-export const INITIAL_POPULATION_PER_GROUP = 20;
+export const INITIAL_POPULATION_PER_GROUP = 50;
 export const INITIAL_FOOD_COUNT = 70;
 
-// Groups configuration
-export const GROUPS = [{ color: '#ff5555' }, { color: '#55aaff' }, { color: '#55ff55' }];
+export interface Group {
+  color: string;
+}
+
+export const GROUPS: Group[] = [
+  { color: '#ff0000' }, // Red
+  { color: '#00ff00' }, // Green
+  { color: '#0000ff' }, // Blue
+  { color: '#ffff00' }, // Yellow
+];
 
 // Game state class for mutable variables
 export class GameState {
