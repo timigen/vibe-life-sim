@@ -69,6 +69,6 @@ export class UISystem extends System {
     document.getElementById('finalStarvationDeaths')!.textContent = GameState.deathsByStarvation.toString();
     document.getElementById('finalOldAgeDeaths')!.textContent = GameState.deathsByOldAge.toString();
     document.getElementById('finalFPS')!.textContent = GameState.avgFps.toString();
-    document.getElementById('gameOver')!.style.display = 'flex';
+    document.getElementById('simulationOver')!.style.display = 'flex';
   }
 } 

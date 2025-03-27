@@ -71,7 +71,7 @@ export class LifecycleSystem extends System {
       GameState.maxPopulation = currentPopulation;
     }
 
-    // Check for game over
+    // Check for simulation over
     if (currentPopulation === 0) {
       this.uiSystem.showGameOver();
     }
