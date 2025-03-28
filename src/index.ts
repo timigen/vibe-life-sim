@@ -20,6 +20,7 @@ import {
   GROUPS,
   INITIAL_FOOD_COUNT,
   ENABLE_FOOD_SPAWNING,
+  CORPSES_BECOME_FOOD,
 } from './constants';
 
 // Global variables
@@ -157,6 +158,11 @@ eventEmitter.emit(EVENTS.POPULATION_CHANGED, {
 const foodSpawningStatus = document.getElementById('foodSpawningStatus')!;
 foodSpawningStatus.textContent = ENABLE_FOOD_SPAWNING ? 'ENABLED' : 'DISABLED';
 foodSpawningStatus.style.color = ENABLE_FOOD_SPAWNING ? '#4CAF50' : '#ff4444';
+
+// Update corpses to food status indicator
+const corpsesFoodStatus = document.getElementById('corpsesFoodStatus')!;
+corpsesFoodStatus.textContent = CORPSES_BECOME_FOOD ? 'ENABLED' : 'DISABLED';
+corpsesFoodStatus.style.color = CORPSES_BECOME_FOOD ? '#4CAF50' : '#ff4444';
 
 // Only start animation if not paused
 if (!SimState.paused) {

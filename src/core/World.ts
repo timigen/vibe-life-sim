@@ -9,6 +9,7 @@ import { Vector2D } from './Vector2D';
 import { eventEmitter, EVENTS } from './events/EventEmitter';
 import { LifePool } from './LifePool';
 import { SimState } from './config/SimState';
+import { CORPSES_BECOME_FOOD } from '../constants';
 
 export class World {
   private entities: Entity[] = [];
@@ -57,8 +58,10 @@ export class World {
         group: entity.getComponent(LifeComponent)?.group,
       });
 
-      // Spawn food at the death location
-      this.spawnFood(comp.pos.x, comp.pos.y);
+      // Spawn food at the death location only if enabled
+      if (CORPSES_BECOME_FOOD) {
+        this.spawnFood(comp.pos.x, comp.pos.y);
+      }
     }
     this.removeEntity(entity);
     this.lifePool.despawn(entity);
