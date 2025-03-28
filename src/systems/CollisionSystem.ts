@@ -34,7 +34,7 @@ export class CollisionSystem extends System {
     if (SimState.paused) return;
 
     const BATCH_SIZE = 100;
-    // Use all filtered entities for collision detection
+    // Use filtered entities for collision detection
     this.allEntities = [...this.filteredEntities];
     const lifeEntities = this.allEntities.filter(e => e.hasComponent(LifeComponent));
     const foodEntities = this.allEntities.filter(e => e.hasComponent(FoodComponent));

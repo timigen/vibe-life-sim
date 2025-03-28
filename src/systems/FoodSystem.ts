@@ -20,6 +20,7 @@ export class FoodSystem extends System {
       if (data.foodEntity && DEBUG_MODE) {
         console.log('FoodSystem received FOOD_CONSUMED event');
       }
+      return Promise.resolve();
     });
   }
 

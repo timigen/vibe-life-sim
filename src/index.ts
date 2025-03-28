@@ -1,7 +1,4 @@
 import { FOOD_CONFIG } from './core/config/FoodConfig';
-import { FoodComponent } from './components/FoodComponent';
-import { PositionComponent } from './components/PositionComponent';
-import { LifeComponent } from './components/LifeComponent';
 import { RenderingSystem } from './systems/RenderingSystem';
 import { MovementSystem } from './systems/MovementSystem';
 import { LifecycleSystem } from './systems/LifecycleSystem';

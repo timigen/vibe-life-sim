@@ -5,7 +5,6 @@ import { World } from '../core/World';
 import { Entity } from '../core/ecs/Entity';
 import { SimState } from '../core/config/SimState';
 import { LIFE_CONFIG } from '../core/config/LifeConfig';
-import { eventEmitter, EVENTS } from '../core/events/EventEmitter';
 
 export class LifecycleSystem extends System {
   constructor(private world: World) {

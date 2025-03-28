@@ -114,10 +114,8 @@ export class World {
     // Ensure food is marked as consumed
     food.consumed = true;
 
-    // Remove from entity list
+    // Remove from entity list and all systems
     this.entities.splice(index, 1);
-
-    // Remove from all systems
     this.systems.forEach(system => system.removeEntity(foodEntity));
 
     if (DEBUG_MODE) {
