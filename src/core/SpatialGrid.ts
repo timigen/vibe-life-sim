@@ -1,6 +1,8 @@
 import { PositionComponent } from '../components/PositionComponent';
 import { LifeComponent } from '../components/LifeComponent';
+import { FoodComponent } from '../components/FoodComponent';
 import { Entity } from './ecs/Entity';
+import { DEBUG_MODE } from '../constants';
 
 export class SpatialGrid {
   private grid: Map<string, Set<Entity>> = new Map();
@@ -18,10 +20,21 @@ export class SpatialGrid {
     }
 
     const component = entity.getComponent(PositionComponent);
-    const life = entity.getComponent(LifeComponent);
-    if (!component || !life) return [];
+    if (!component) return [];
 
-    const radius = life.radius;
+    // Get radius from either Life or Food component
+    let radius = 0;
+    if (entity.hasComponent(LifeComponent)) {
+      const life = entity.getComponent(LifeComponent);
+      radius = life!.radius;
+    } else if (entity.hasComponent(FoodComponent)) {
+      const food = entity.getComponent(FoodComponent);
+      radius = food!.radius;
+    } else {
+      // Entity has no size component, return empty
+      return [];
+    }
+
     const minX = Math.floor((component.pos.x - radius) / this.cellSize);
     const maxX = Math.floor((component.pos.x + radius) / this.cellSize);
     const minY = Math.floor((component.pos.y - radius) / this.cellSize);
@@ -44,8 +57,14 @@ export class SpatialGrid {
     this.grid.clear();
     this.entityCellCache.clear();
 
+    let foodCount = 0;
+    let lifeCount = 0;
+    
     // Add entities to their cells
     for (const entity of entities) {
+      if (entity.hasComponent(FoodComponent)) foodCount++;
+      if (entity.hasComponent(LifeComponent)) lifeCount++;
+      
       const cells = this.getEntityCells(entity);
       for (const cell of cells) {
         if (!this.grid.has(cell)) {
@@ -53,6 +72,10 @@ export class SpatialGrid {
         }
         this.grid.get(cell)!.add(entity);
       }
+    }
+    
+    if (DEBUG_MODE && (foodCount > 0 || lifeCount > 0)) {
+      console.log(`SpatialGrid updated with ${lifeCount} life entities and ${foodCount} food entities`);
     }
   }
 

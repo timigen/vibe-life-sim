@@ -9,7 +9,7 @@ import { Vector2D } from './Vector2D';
 import { eventEmitter, EVENTS } from './events/EventEmitter';
 import { LifePool } from './LifePool';
 import { SimState } from './config/SimState';
-import { CORPSES_BECOME_FOOD } from '../constants';
+import { CORPSES_BECOME_FOOD, DEBUG_MODE } from '../constants';
 
 export class World {
   private entities: Entity[] = [];
@@ -93,14 +93,39 @@ export class World {
   }
 
   removeFood(foodEntity: Entity): void {
+    // Check if it's actually a food entity
     const food = foodEntity.getComponent(FoodComponent);
-    if (!food) return;
+    if (!food) {
+      if (DEBUG_MODE) {
+        console.warn(`Attempted to remove non-food entity: ${foodEntity.id}`);
+      }
+      return;
+    }
+
+    // Check if the entity exists in the list
+    const index = this.entities.indexOf(foodEntity);
+    if (index === -1) {
+      if (DEBUG_MODE) {
+        console.warn(`Attempted to remove food entity that doesn't exist: ${foodEntity.id}`);
+      }
+      return;
+    }
 
     // Ensure food is marked as consumed
     food.consumed = true;
 
     // Remove from entity list
-    this.removeEntity(foodEntity);
+    this.entities.splice(index, 1);
+    
+    // Remove from all systems
+    this.systems.forEach(system => system.removeEntity(foodEntity));
+
+    if (DEBUG_MODE) {
+      console.log(`Food entity ${foodEntity.id} successfully removed`);
+    }
+
+    // Emit entity destroyed event
+    eventEmitter.emit(EVENTS.ENTITY_DESTROYED, { entity: foodEntity });
   }
 
   addSystem(system: System): void {
@@ -139,6 +164,36 @@ export class World {
 
   getPopulation(): number {
     return this.lifePool.getActiveCount();
+  }
+
+  // Debug method to dump all entity information
+  debugEntities(): void {
+    if (!DEBUG_MODE) return;
+    
+    console.log('=== ENTITY DEBUG ===');
+    console.log(`Total entities: ${this.entities.length}`);
+    
+    const foods = this.getFoods();
+    console.log(`Food entities: ${foods.length}`);
+    
+    const lifeEntities = this.entities.filter(entity => entity.hasComponent(LifeComponent));
+    console.log(`Life entities: ${lifeEntities.length}`);
+    
+    const consumedFoods = foods.filter(entity => {
+      const food = entity.getComponent(FoodComponent);
+      return food?.consumed === true;
+    });
+    console.log(`Consumed food entities: ${consumedFoods.length}`);
+    
+    if (consumedFoods.length > 0) {
+      console.log('Consumed foods:');
+      consumedFoods.forEach(entity => {
+        const pos = entity.getComponent(PositionComponent);
+        console.log(`  Food #${entity.id} at [${pos?.pos.x.toFixed(2)}, ${pos?.pos.y.toFixed(2)}]`);
+      });
+    }
+    
+    console.log('===================');
   }
 
   // Refresh filtering for all systems - useful when entities change components

@@ -6,21 +6,19 @@ import { SimUtils } from '../utils/SimUtils';
 import { World } from '../core/World';
 import { Entity } from '../core/ecs/Entity';
 import { eventEmitter, EVENTS } from '../core/events/EventEmitter';
-import { ENABLE_FOOD_SPAWNING } from '../constants';
+import { ENABLE_FOOD_SPAWNING, DEBUG_MODE } from '../constants';
 import { SimState } from '../core/config/SimState';
 
 export class FoodSystem extends System {
+  private lastLogTime: number = 0;
+  
   constructor(private world: World) {
     super();
 
-    // Listen for food consumption events to remove the consumed food
+    // Listen for food consumption events - we'll use this just for logging
     eventEmitter.on(EVENTS.FOOD_CONSUMED, async (data: any) => {
-      if (data.foodEntity) {
-        const food = data.foodEntity.getComponent(FoodComponent);
-        if (food) {
-          food.consumed = true;
-          this.world.removeFood(data.foodEntity);
-        }
+      if (data.foodEntity && DEBUG_MODE) {
+        console.log('FoodSystem received FOOD_CONSUMED event');
       }
     });
   }
@@ -36,6 +34,15 @@ export class FoodSystem extends System {
     // Only spawn new food if enabled and simulation is not paused
     if (ENABLE_FOOD_SPAWNING && !SimState.paused) {
       this.spawnFood();
+    }
+    
+    // Log food stats periodically
+    if (DEBUG_MODE) {
+      const now = performance.now();
+      if (now - this.lastLogTime > 5000) { // Log every 5 seconds
+        this.logFoodStats();
+        this.lastLogTime = now;
+      }
     }
   }
 
@@ -55,14 +62,36 @@ export class FoodSystem extends System {
   }
 
   private removeConsumedFood(): void {
-    // Check for food marked as consumed and remove it immediately
-    // Use a reverse loop to safely remove entities during iteration
-    for (let i = this.filteredEntities.length - 1; i >= 0; i--) {
-      const entity = this.filteredEntities[i];
+    // Get all food entities 
+    const foodEntities = this.world.getFoods();
+    
+    let removedCount = 0;
+    // Remove any that are marked as consumed
+    for (const entity of foodEntities) {
       const food = entity.getComponent(FoodComponent);
       if (food?.consumed) {
+        // Use the specialized removeFood method for better reliability
         this.world.removeFood(entity);
+        removedCount++;
       }
     }
+    
+    if (removedCount > 0 && DEBUG_MODE) {
+      console.log(`FoodSystem removed ${removedCount} consumed food items`);
+    }
+  }
+  
+  private logFoodStats(): void {
+    const allFoods = this.world.getFoods();
+    const consumedFoods = allFoods.filter(entity => {
+      const food = entity.getComponent(FoodComponent);
+      return food?.consumed === true;
+    });
+    
+    console.log('=== FOOD STATS ===');
+    console.log(`Total food entities: ${allFoods.length}`);
+    console.log(`Consumed food entities: ${consumedFoods.length}`);
+    console.log(`Active food entities: ${allFoods.length - consumedFoods.length}`);
+    console.log('=================');
   }
 }

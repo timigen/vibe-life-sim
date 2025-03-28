@@ -9,6 +9,7 @@ export const INITIAL_POPULATION_PER_GROUP = 10;
 export const INITIAL_FOOD_COUNT = 20;
 export const ENABLE_FOOD_SPAWNING = false; // Controls whether food spawns after initialization
 export const CORPSES_BECOME_FOOD = false; // Controls whether dead life forms convert to food
+export const DEBUG_MODE = true; // Enable console logging for debugging
 
 // Array of groups with their respective colors
 export const GROUPS: Group[] = [

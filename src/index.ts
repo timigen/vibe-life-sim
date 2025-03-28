@@ -32,11 +32,11 @@ canvas.height = SimState.CANVAS_HEIGHT;
 const world = new World(INITIAL_POPULATION_PER_GROUP * GROUPS.length * 2 * 2); // Double initial size for growth
 const uiSystem = new UISystem(world);
 const foodSystem = new FoodSystem(world);
-const collisionSystem = new CollisionSystem();
+const collisionSystem = new CollisionSystem(world);
 
 // Add systems in priority order
 world.addSystem(collisionSystem); // Collision detection first
-world.addSystem(foodSystem); // Food system second to handle consumed food
+world.addSystem(foodSystem);      // Food system second to handle consumed food
 world.addSystem(new LifecycleSystem(world));
 world.addSystem(new MatingSystem(world));
 world.addSystem(new MovementSystem());
