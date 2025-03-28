@@ -2,9 +2,11 @@ import { Component } from '../core/ecs/Component';
 import { Group } from '../core/types/Group';
 
 export class LifeComponent extends Component {
+  // Energy-related properties
   public energy: number = 500;
   public maxEnergy: number = 1000;
 
+  // Pre-existing properties from constructor
   constructor(
     public radius: number,
     public hunger: number = 0,

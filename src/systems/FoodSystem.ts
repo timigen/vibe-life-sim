@@ -63,22 +63,21 @@ export class FoodSystem extends System {
   }
 
   private removeConsumedFood(): void {
-    // Get all food entities
-    const foodEntities = this.world.getFoods();
-
-    let removedCount = 0;
-    // Remove any that are marked as consumed
-    for (const entity of foodEntities) {
+    // Get all food entities already marked as consumed to avoid redundant filtering
+    const foodEntities = this.world.getFoods().filter(entity => {
       const food = entity.getComponent(FoodComponent);
-      if (food?.consumed) {
-        // Use the specialized removeFood method for better reliability
-        this.world.removeFood(entity);
-        removedCount++;
-      }
+      return food?.consumed === true;
+    });
+
+    if (foodEntities.length === 0) return;
+
+    // Remove consumed food entities
+    for (const entity of foodEntities) {
+      this.world.removeFood(entity);
     }
 
-    if (removedCount > 0 && DEBUG_MODE) {
-      console.log(`FoodSystem removed ${removedCount} consumed food items`);
+    if (DEBUG_MODE && foodEntities.length > 0) {
+      console.log(`FoodSystem removed ${foodEntities.length} consumed food items`);
     }
   }
 

@@ -154,10 +154,10 @@ export class CollisionSystem extends System {
         console.log(`Collision detected between Life ${lifeEntity.id} and Food ${foodEntity.id}`);
       }
 
-      // Mark the food as consumed before removing it
+      // Mark the food as consumed
       food.consumed = true;
 
-      // Food is consumed - reduce hunger and add energy
+      // Update life entity attributes
       life.hunger = Math.max(0, life.hunger - food.nutritionalValue);
       life.energy = Math.min(life.maxEnergy, life.energy + food.nutritionalValue);
 
@@ -168,7 +168,7 @@ export class CollisionSystem extends System {
         position: { x: foodPos.pos.x, y: foodPos.pos.y },
       });
 
-      // Remove the food entity directly
+      // Remove the food entity
       this.world.removeFood(foodEntity);
 
       if (DEBUG_MODE) {

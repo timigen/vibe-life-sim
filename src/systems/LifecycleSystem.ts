@@ -31,9 +31,11 @@ export class LifecycleSystem extends System {
       life.age += deltaTime;
       life.hunger += (life.restTimer > 0 ? 0.1 : 0.5) * deltaTime;
 
-      // Decrease energy over time (energy is consumed faster when moving)
-      life.energy -= (life.restTimer > 0 ? 0.1 : 0.3) * deltaTime;
-      if (life.energy < 0) life.energy = 0;
+      // Decrease energy over time (only when resting - active movement energy is handled by MovementSystem)
+      if (life.restTimer > 0) {
+        life.energy -= 0.1 * deltaTime;
+        if (life.energy < 0) life.energy = 0;
+      }
 
       // Update group stats
       const groupStat = SimState.groupStats.find(

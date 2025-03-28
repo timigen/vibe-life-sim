@@ -13,12 +13,7 @@ export class MovementSystem extends System {
   private foodEntities: Entity[] = [];
 
   shouldProcessEntity(entity: Entity): boolean {
-    // For food entities, we just want to track them
-    if (entity.hasComponent(FoodComponent)) {
-      this.foodEntities.push(entity);
-      return false;
-    }
-
+    // We don't need to store food entities here since we rebuild the list in update()
     return entity.hasComponent(LifeComponent) && entity.hasComponent(PositionComponent);
   }
 
@@ -108,9 +103,7 @@ export class MovementSystem extends System {
     let closestDistance = Number.MAX_VALUE;
 
     for (const food of this.foodEntities) {
-      const foodComp = food.getComponent(FoodComponent);
-      if (foodComp?.consumed) continue; // Skip consumed food
-
+      // No need to check for consumed food here as we already filter those out in update()
       const foodPos = food.getComponent(PositionComponent)!.pos;
       const distance = position.distanceTo(foodPos);
 
