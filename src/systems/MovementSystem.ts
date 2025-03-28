@@ -40,7 +40,9 @@ export class MovementSystem extends System {
     }
 
     if (DEBUG_MODE && this.filteredEntities.length > 0) {
-      console.log(`MovementSystem: ${this.filteredEntities.length} life entities, ${this.foodEntities.length} food entities available`);
+      console.log(
+        `MovementSystem: ${this.filteredEntities.length} life entities, ${this.foodEntities.length} food entities available`
+      );
     }
 
     // Use filteredEntities instead of entities - no need to check components again
@@ -68,10 +70,13 @@ export class MovementSystem extends System {
 
           const speed = LIFE_CONFIG.SPEED * 1.5; // Move faster when hungry
           position.vel = direction.multiply(speed);
-          
-          if (DEBUG_MODE && Math.random() < 0.05) { // Log occasionally to avoid spam
+
+          if (DEBUG_MODE && Math.random() < 0.05) {
+            // Log occasionally to avoid spam
             const distance = position.pos.distanceTo(foodPos);
-            console.log(`Life #${entity.id} moving toward Food #${closestFood.id} at distance ${distance.toFixed(2)}`);
+            console.log(
+              `Life #${entity.id} moving toward Food #${closestFood.id} at distance ${distance.toFixed(2)}`
+            );
           }
         }
       } else if (Math.random() < 0.02) {
@@ -84,6 +89,11 @@ export class MovementSystem extends System {
       // Update position using deltaTime
       position.pos.x += position.vel.x * deltaTime;
       position.pos.y += position.vel.y * deltaTime;
+
+      // Moving consumes energy - more when moving faster
+      const speed = Math.sqrt(position.vel.x * position.vel.x + position.vel.y * position.vel.y);
+      const energyCost = speed * 0.02 * deltaTime;
+      life.energy = Math.max(0, life.energy - energyCost);
 
       // Keep within bounds
       const clampedPosition = SimUtils.clampPosition(position.pos, life.radius);
@@ -100,7 +110,7 @@ export class MovementSystem extends System {
     for (const food of this.foodEntities) {
       const foodComp = food.getComponent(FoodComponent);
       if (foodComp?.consumed) continue; // Skip consumed food
-      
+
       const foodPos = food.getComponent(PositionComponent)!.pos;
       const distance = position.distanceTo(foodPos);
 
@@ -109,9 +119,12 @@ export class MovementSystem extends System {
         closestFood = food;
       }
     }
-    
-    if (DEBUG_MODE && closestFood && Math.random() < 0.01) { // Log occasionally
-      console.log(`Found closest food #${closestFood.id} at distance ${closestDistance.toFixed(2)}`);
+
+    if (DEBUG_MODE && closestFood && Math.random() < 0.01) {
+      // Log occasionally
+      console.log(
+        `Found closest food #${closestFood.id} at distance ${closestDistance.toFixed(2)}`
+      );
     }
 
     return closestFood;

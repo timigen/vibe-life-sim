@@ -36,7 +36,7 @@ const collisionSystem = new CollisionSystem(world);
 
 // Add systems in priority order
 world.addSystem(collisionSystem); // Collision detection first
-world.addSystem(foodSystem);      // Food system second to handle consumed food
+world.addSystem(foodSystem); // Food system second to handle consumed food
 world.addSystem(new LifecycleSystem(world));
 world.addSystem(new MatingSystem(world));
 world.addSystem(new MovementSystem());

@@ -11,7 +11,7 @@ import { SimState } from '../core/config/SimState';
 
 export class FoodSystem extends System {
   private lastLogTime: number = 0;
-  
+
   constructor(private world: World) {
     super();
 
@@ -35,11 +35,12 @@ export class FoodSystem extends System {
     if (ENABLE_FOOD_SPAWNING && !SimState.paused) {
       this.spawnFood();
     }
-    
+
     // Log food stats periodically
     if (DEBUG_MODE) {
       const now = performance.now();
-      if (now - this.lastLogTime > 5000) { // Log every 5 seconds
+      if (now - this.lastLogTime > 5000) {
+        // Log every 5 seconds
         this.logFoodStats();
         this.lastLogTime = now;
       }
@@ -62,9 +63,9 @@ export class FoodSystem extends System {
   }
 
   private removeConsumedFood(): void {
-    // Get all food entities 
+    // Get all food entities
     const foodEntities = this.world.getFoods();
-    
+
     let removedCount = 0;
     // Remove any that are marked as consumed
     for (const entity of foodEntities) {
@@ -75,19 +76,19 @@ export class FoodSystem extends System {
         removedCount++;
       }
     }
-    
+
     if (removedCount > 0 && DEBUG_MODE) {
       console.log(`FoodSystem removed ${removedCount} consumed food items`);
     }
   }
-  
+
   private logFoodStats(): void {
     const allFoods = this.world.getFoods();
     const consumedFoods = allFoods.filter(entity => {
       const food = entity.getComponent(FoodComponent);
       return food?.consumed === true;
     });
-    
+
     console.log('=== FOOD STATS ===');
     console.log(`Total food entities: ${allFoods.length}`);
     console.log(`Consumed food entities: ${consumedFoods.length}`);

@@ -33,7 +33,9 @@ export class MatingSystem extends System {
         if (aLife.dead || bLife.dead || aLife.group !== bLife.group) continue;
         if (
           aLife.hunger > LIFE_CONFIG.HUNGER_THRESHOLD_FOR_MATING ||
-          bLife.hunger > LIFE_CONFIG.HUNGER_THRESHOLD_FOR_MATING
+          bLife.hunger > LIFE_CONFIG.HUNGER_THRESHOLD_FOR_MATING ||
+          aLife.energy < 200 || // Require sufficient energy to mate
+          bLife.energy < 200 // Minimum energy threshold for mating
         )
           continue;
 

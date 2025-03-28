@@ -75,6 +75,23 @@ export class RenderingSystem extends System {
     this.ctx.fillStyle = 'white';
     this.ctx.textAlign = 'center';
     this.ctx.fillText(`G${life.generation}`, comp.pos.x, comp.pos.y - life.radius - 5);
+
+    // Draw energy bar
+    const barWidth = life.radius * 2;
+    const barHeight = 2;
+    const barX = comp.pos.x - life.radius;
+    const barY = comp.pos.y + life.radius + 3;
+
+    // Background (empty) bar
+    this.ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+    this.ctx.fillRect(barX, barY, barWidth, barHeight);
+
+    // Foreground (filled) bar - green to red based on energy level
+    const energyRatio = life.energy / life.maxEnergy;
+    const r = Math.floor(255 * (1 - energyRatio));
+    const g = Math.floor(255 * energyRatio);
+    this.ctx.fillStyle = `rgb(${r}, ${g}, 0)`;
+    this.ctx.fillRect(barX, barY, barWidth * energyRatio, barHeight);
   }
 
   private drawFood(comp: PositionComponent, food: FoodComponent): void {

@@ -32,15 +32,17 @@ export class CollisionSystem extends System {
 
   async update(deltaTime: number): Promise<void> {
     if (SimState.paused) return;
-    
+
     const BATCH_SIZE = 100;
     // Use all filtered entities for collision detection
     this.allEntities = [...this.filteredEntities];
     const lifeEntities = this.allEntities.filter(e => e.hasComponent(LifeComponent));
     const foodEntities = this.allEntities.filter(e => e.hasComponent(FoodComponent));
-    
+
     if (DEBUG_MODE) {
-      console.log(`CollisionSystem processing ${lifeEntities.length} life entities and ${foodEntities.length} food entities`);
+      console.log(
+        `CollisionSystem processing ${lifeEntities.length} life entities and ${foodEntities.length} food entities`
+      );
     }
 
     // Update spatial grid with all entities positions
@@ -52,17 +54,17 @@ export class CollisionSystem extends System {
       for (const lifeEntity of lifeEntities) {
         const life = lifeEntity.getComponent(LifeComponent);
         if (!life || life.dead) continue;
-        
+
         const lifePos = lifeEntity.getComponent(PositionComponent);
         if (!lifePos) continue;
-        
+
         for (const foodEntity of foodEntities) {
           const food = foodEntity.getComponent(FoodComponent);
           if (!food || food.consumed) continue;
-          
+
           const foodPos = foodEntity.getComponent(PositionComponent);
           if (!foodPos) continue;
-          
+
           this.processLifeFoodCollision(lifeEntity, foodEntity, lifePos, foodPos);
         }
       }
@@ -76,11 +78,12 @@ export class CollisionSystem extends System {
         await new Promise(resolve => setTimeout(resolve, 0));
       }
     }
-    
+
     // Periodically run debug checks
     if (DEBUG_MODE) {
       const now = performance.now();
-      if (now - this.lastDebugTime > 10000) { // Every 10 seconds
+      if (now - this.lastDebugTime > 10000) {
+        // Every 10 seconds
         this.world.debugEntities();
         this.lastDebugTime = now;
       }
@@ -140,9 +143,9 @@ export class CollisionSystem extends System {
   ): void {
     const life = lifeEntity.getComponent(LifeComponent);
     const food = foodEntity.getComponent(FoodComponent);
-    
+
     if (!life || !food || life.dead || food.consumed) return;
-    
+
     const distance = lifePos.pos.distanceTo(foodPos.pos);
     const minDistance = life.radius + food.radius;
 
@@ -150,26 +153,28 @@ export class CollisionSystem extends System {
       if (DEBUG_MODE) {
         console.log(`Collision detected between Life ${lifeEntity.id} and Food ${foodEntity.id}`);
       }
-      
+
       // Mark the food as consumed before removing it
       food.consumed = true;
-      
+
       // Food is consumed - reduce hunger and add energy
-      life.hunger = Math.max(0, life.hunger - food.nutritionalValue); 
+      life.hunger = Math.max(0, life.hunger - food.nutritionalValue);
       life.energy = Math.min(life.maxEnergy, life.energy + food.nutritionalValue);
-      
+
       // Emit food consumed event
       eventEmitter.emit(EVENTS.FOOD_CONSUMED, {
         lifeEntity,
         foodEntity,
-        position: { x: foodPos.pos.x, y: foodPos.pos.y }
+        position: { x: foodPos.pos.x, y: foodPos.pos.y },
       });
-      
+
       // Remove the food entity directly
       this.world.removeFood(foodEntity);
-      
+
       if (DEBUG_MODE) {
-        console.log(`Food ${foodEntity.id} consumed by Life ${lifeEntity.id} and removed. Life hunger: ${life.hunger}, energy: ${life.energy}`);
+        console.log(
+          `Food ${foodEntity.id} consumed by Life ${lifeEntity.id} and removed. Life hunger: ${life.hunger}, energy: ${life.energy}`
+        );
       }
     }
   }

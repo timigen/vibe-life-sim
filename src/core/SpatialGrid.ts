@@ -59,12 +59,12 @@ export class SpatialGrid {
 
     let foodCount = 0;
     let lifeCount = 0;
-    
+
     // Add entities to their cells
     for (const entity of entities) {
       if (entity.hasComponent(FoodComponent)) foodCount++;
       if (entity.hasComponent(LifeComponent)) lifeCount++;
-      
+
       const cells = this.getEntityCells(entity);
       for (const cell of cells) {
         if (!this.grid.has(cell)) {
@@ -73,9 +73,11 @@ export class SpatialGrid {
         this.grid.get(cell)!.add(entity);
       }
     }
-    
+
     if (DEBUG_MODE && (foodCount > 0 || lifeCount > 0)) {
-      console.log(`SpatialGrid updated with ${lifeCount} life entities and ${foodCount} food entities`);
+      console.log(
+        `SpatialGrid updated with ${lifeCount} life entities and ${foodCount} food entities`
+      );
     }
   }
 

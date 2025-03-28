@@ -31,6 +31,10 @@ export class LifecycleSystem extends System {
       life.age += deltaTime;
       life.hunger += (life.restTimer > 0 ? 0.1 : 0.5) * deltaTime;
 
+      // Decrease energy over time (energy is consumed faster when moving)
+      life.energy -= (life.restTimer > 0 ? 0.1 : 0.3) * deltaTime;
+      if (life.energy < 0) life.energy = 0;
+
       // Update group stats
       const groupStat = SimState.groupStats.find(
         (stat: { color: string; name: string; maxPopulation: number; highestGeneration: number }) =>
@@ -50,23 +54,32 @@ export class LifecycleSystem extends System {
 
       // Handle pregnancy and birth
       if (life.sex === 'female' && life.isPregnant) {
+        // Pregnancy requires more energy
+        life.energy -= 0.2 * deltaTime;
+
         life.gestationTimer -= deltaTime;
         if (life.gestationTimer <= 0) {
-          const comp = entity.getComponent(PositionComponent)!;
-          const offsetX = (Math.random() - 0.5) * 10;
-          const offsetY = (Math.random() - 0.5) * 10;
-          const newSex = Math.random() < 0.5 ? 'male' : 'female';
+          // Only give birth if there's enough energy
+          if (life.energy > 100) {
+            const comp = entity.getComponent(PositionComponent)!;
+            const offsetX = (Math.random() - 0.5) * 10;
+            const offsetY = (Math.random() - 0.5) * 10;
+            const newSex = Math.random() < 0.5 ? 'male' : 'female';
 
-          // Spawn new life form
-          this.world.spawnLife(
-            comp.pos.x + offsetX,
-            comp.pos.y + offsetY,
-            life.group,
-            newSex,
-            life.generation
-          );
+            // Spawn new life form
+            this.world.spawnLife(
+              comp.pos.x + offsetX,
+              comp.pos.y + offsetY,
+              life.group,
+              newSex,
+              life.generation
+            );
 
-          // Reset pregnancy
+            // Giving birth costs energy
+            life.energy -= 100;
+          }
+
+          // Reset pregnancy regardless
           life.isPregnant = false;
           life.gestationTimer = 0;
         }
@@ -78,6 +91,12 @@ export class LifecycleSystem extends System {
       }
 
       if (life.hunger > LIFE_CONFIG.HUNGER_LIMIT) {
+        life.dead = true;
+        SimState.deathsByStarvation++;
+      }
+
+      // Energy is now vital - entities die when they run out
+      if (life.energy <= 0) {
         life.dead = true;
         SimState.deathsByStarvation++;
       }

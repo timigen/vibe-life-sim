@@ -116,7 +116,7 @@ export class World {
 
     // Remove from entity list
     this.entities.splice(index, 1);
-    
+
     // Remove from all systems
     this.systems.forEach(system => system.removeEntity(foodEntity));
 
@@ -169,22 +169,22 @@ export class World {
   // Debug method to dump all entity information
   debugEntities(): void {
     if (!DEBUG_MODE) return;
-    
+
     console.log('=== ENTITY DEBUG ===');
     console.log(`Total entities: ${this.entities.length}`);
-    
+
     const foods = this.getFoods();
     console.log(`Food entities: ${foods.length}`);
-    
+
     const lifeEntities = this.entities.filter(entity => entity.hasComponent(LifeComponent));
     console.log(`Life entities: ${lifeEntities.length}`);
-    
+
     const consumedFoods = foods.filter(entity => {
       const food = entity.getComponent(FoodComponent);
       return food?.consumed === true;
     });
     console.log(`Consumed food entities: ${consumedFoods.length}`);
-    
+
     if (consumedFoods.length > 0) {
       console.log('Consumed foods:');
       consumedFoods.forEach(entity => {
@@ -192,7 +192,7 @@ export class World {
         console.log(`  Food #${entity.id} at [${pos?.pos.x.toFixed(2)}, ${pos?.pos.y.toFixed(2)}]`);
       });
     }
-    
+
     console.log('===================');
   }
 
